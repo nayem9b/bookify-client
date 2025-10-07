@@ -1,75 +1,518 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AddAProduct from "../AddAProduct/AddAProduct";
-import BooksCategory from "../BooksCategory/BooksCategory";
 import { useQuery } from "@tanstack/react-query";
-import AdvertisedCard from "../AdvertisedCard/AdvertisedCard";
 import { AuthContext } from "../Context/UserContext";
-import { Content } from "../Content/Content";
-import CategoryCard from "../Trial/CategoryCard/CategoryCard";
-import BookLover from "../BookLover/BookLover";
+import { motion } from "framer-motion";
+import { FiSearch, FiBookOpen, FiStar, FiClock, FiTrendingUp, FiArrowRight } from "react-icons/fi";
+
+// Animation variants
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.8 } }
+};
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  
   useEffect(() => {
-    fetch(`http://localhost:5000/category`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data));
+    // Mock data for categories
+    const mockCategories = [
+      { _id: 1, name: 'Fiction', count: 124 },
+      { _id: 2, name: 'Science', count: 89 },
+      { _id: 3, name: 'Biography', count: 67 },
+      { _id: 4, name: 'History', count: 92 },
+      { _id: 5, name: 'Technology', count: 45 },
+      { _id: 6, name: 'Self-Help', count: 78 },
+    ];
+    setCategories(mockCategories);
   }, []);
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/myproduct/:id")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // }, []);
-  // console.log(categories);
 
-  const {
-    data: advertisedproducts = [],
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["email"],
-    queryFn: async () => {
-      const res = await fetch(`http://localhost:5000/advertised`);
-      const data = await res.json();
-      return data;
+  // Mock data for featured books
+  const featuredBooks = [
+    {
+      _id: 1,
+      title: 'The Great Adventure',
+      author: 'John Doe',
+      price: 24.99,
+      rating: 4.8,
+      image: 'https://source.unsplash.com/random/400x600/?book-cover,novel'
     },
-  });
+    {
+      _id: 2,
+      title: 'Digital Fortress',
+      author: 'Jane Smith',
+      price: 19.99,
+      rating: 4.5,
+      image: 'https://source.unsplash.com/random/400x600/?book,technology'
+    },
+    {
+      _id: 3,
+      title: 'The Hidden Truth',
+      author: 'Alex Johnson',
+      price: 29.99,
+      rating: 4.9,
+      image: 'https://source.unsplash.com/random/400x600/?mystery,book'
+    },
+    {
+      _id: 4,
+      title: 'Future of AI',
+      author: 'Sam Wilson',
+      price: 34.99,
+      rating: 4.7,
+      image: 'https://source.unsplash.com/random/400x600/?ai,technology'
+    }
+  ];
 
   const { user } = useContext(AuthContext);
-  return (
-    <section>
-      <div className='flex mx-20 lg:mb-20'>
-        <h1 className='w-1/2 text-7xl lg:mt-[270px] font-extrabold text-transparent text-8xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-5xl '>
-          Love to read books?
-        </h1>
-        <BookLover></BookLover>
-      </div>
 
-      <Content></Content>
-      <h1 className='text-center text-5xl font-semibold mb-10'>
-        Product Categories
-      </h1>
-      <div className='lg:ml-14 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-3 gap-3 justify-center '>
-        {categories.map((category) => (
-          <CategoryCard category={category} key={category.to}></CategoryCard>
-        ))}
-      </div>
-      {advertisedproducts.length > 0 && (
-        <div>
-          <h1 className='text-center text-5xl font-semibold mb-10 '>
-            Advertised Products
-          </h1>
-          <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 sm:mx-6 gap-4'>
-            {advertisedproducts.map((product) => (
-              <AdvertisedCard
-                product={product}
-                key={product._id}></AdvertisedCard>
-            ))}
-          </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Hero Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        
+        <div className="relative container mx-auto px-6 py-24 md:py-32 lg:flex lg:items-center lg:justify-between">
+          <motion.div 
+            variants={fadeIn}
+            initial="hidden"
+            animate="show"
+            className="lg:w-1/2 space-y-6 z-10"
+          >
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold leading-tight text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Discover Your Next <span className="text-yellow-300">Favorite</span> Book
+            </motion.h1>
+            
+            <motion.p 
+              className="text-xl text-indigo-100"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Explore thousands of books across various genres. Find your next read today!
+            </motion.p>
+            
+            {/* Search Bar */}
+            <motion.div 
+              className="relative max-w-xl mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FiSearch className="h-5 w-5 text-indigo-400" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-12 pr-4 py-4 border-0 rounded-xl bg-white/90 text-gray-900 placeholder-indigo-400 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 shadow-lg"
+                placeholder="Search for books, authors, or categories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <motion.button 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-medium px-6 py-2.5 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg"
+              >
+                Search
+                <FiArrowRight className="h-4 w-4" />
+              </motion.button>
+            </motion.div>
+            
+            <motion.div 
+              className="flex flex-wrap gap-3 pt-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <span className="text-sm font-medium text-indigo-100">Popular:</span>
+              {['Fiction', 'Mystery', 'Science', 'Biography'].map((tag, index) => (
+                <motion.span 
+                  key={tag} 
+                  whileHover={{ y: -2, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                  className="px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-sm cursor-pointer hover:bg-white/30 transition-all duration-200 text-white"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + (index * 0.1) }}
+                >
+                  {tag}
+                </motion.span>
+              ))}
+            </motion.div>
+          </motion.div>
+          
+          <motion.div 
+            className="hidden lg:block lg:w-1/2 relative z-10"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, type: 'spring', stiffness: 100 }}
+          >
+            <div className="relative">
+              <div className="absolute -top-6 -left-6 w-full h-full bg-yellow-400 rounded-2xl -z-10"></div>
+              <div className="relative bg-white p-2 rounded-xl shadow-2xl transform rotate-2">
+                <img 
+                  src="https://source.unsplash.com/random/500x700/?book,reading" 
+                  alt="Book showcase" 
+                  className="rounded-lg w-full h-auto shadow-lg"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-white p-3 rounded-full shadow-xl">
+                  <div className="bg-indigo-600 text-white p-2 rounded-full">
+                    <FiBookOpen className="h-6 w-6" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      )}
-    </section>
+      </motion.div>
+
+      {/* Categories Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white"
+      >
+        <div className="container mx-auto px-6">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Browse by Category</h2>
+            <div className="w-24 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
+          </motion.div>
+          
+          <motion.div 
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {categories?.map((category, index) => (
+              <motion.div 
+                key={category?._id || index}
+                variants={item}
+                whileHover={{ y: -5, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+                className="group"
+              >
+                <Link 
+                  to={`/category/${category?.name?.toLowerCase() || 'all'}`}
+                  className="block p-6 bg-white rounded-2xl hover:shadow-xl transition-all duration-300 text-center border border-gray-100 h-full"
+                >
+                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <FiBookOpen className="h-8 w-8 text-indigo-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-lg">{category?.name || 'Uncategorized'}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{category?.count || 0} books</p>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Featured Books */}
+      <motion.section 
+        className="py-20 bg-gradient-to-br from-gray-50 to-indigo-50"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="container mx-auto px-6">
+          <motion.div 
+            className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="mb-6 md:mb-0">
+              <h2 className="text-4xl font-bold text-gray-900 mb-2">Featured Books</h2>
+              <p className="text-gray-600 text-lg">Handpicked selection of must-read titles</p>
+            </div>
+            <motion.div whileHover={{ x: 5 }}>
+              <Link to="/books" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium text-lg group">
+                View all books
+                <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
+          </motion.div>
+          
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {featuredBooks?.slice(0, 4).map((book, index) => (
+              <motion.div 
+                key={book?._id || index}
+                variants={item}
+                whileHover={{ y: -10, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+                className="group"
+              >
+                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                  <div className="relative pb-[150%] overflow-hidden">
+                    <img 
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                      src={book?.image || 'https://via.placeholder.com/300x450?text=Book+Cover'} 
+                      alt={book?.title || 'Book Cover'}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://via.placeholder.com/300x450?text=Book+Cover';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 p-4 w-full">
+                      <div className="flex items-center">
+                        <div className="flex items-center text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <FiStar key={i} className="w-4 h-4 fill-current" />
+                          ))}
+                          <span className="ml-2 text-white text-sm font-medium">{book?.rating || '4.8'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <motion.button 
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-white/90 hover:bg-white text-indigo-600 p-2 rounded-full shadow-lg"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </motion.button>
+                    </div>
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-2 h-14">{book?.title || 'Untitled Book'}</h3>
+                    <p className="text-gray-600 text-sm mb-4">by {book?.author || 'Unknown Author'}</p>
+                    <div className="mt-auto flex justify-between items-center">
+                      <span className="text-xl font-bold text-indigo-600">${book?.price?.toFixed(2) || '0.00'}</span>
+                      <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Add to Cart
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Features */}
+      <motion.section 
+        className="py-20 bg-white"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="container mx-auto px-6">
+          <motion.div 
+            className="text-center mb-16 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <span className="inline-block bg-indigo-100 text-indigo-600 text-sm font-medium px-4 py-1.5 rounded-full mb-4">Why Choose Us</span>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">The Best Bookstore Experience</h2>
+            <p className="text-gray-600 text-lg">We're dedicated to bringing you the best reading experience with our carefully curated collection of books from around the world.</p>
+          </motion.div>
+          
+          <motion.div 
+            className="grid md:grid-cols-3 gap-8"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {[
+              {
+                icon: <FiTrendingUp className="h-6 w-6 text-white" />,
+                title: "Wide Selection",
+                description: "Thousands of books across all genres to satisfy every reader's taste, from bestsellers to hidden gems.",
+                color: "from-indigo-500 to-purple-500"
+              },
+              {
+                icon: <FiClock className="h-6 w-6 text-white" />,
+                title: "Fast Delivery",
+                description: "Get your books delivered to your doorstep with our fast and reliable shipping options worldwide.",
+                color: "from-amber-500 to-pink-500"
+              },
+              {
+                icon: <FiStar className="h-6 w-6 text-white" />,
+                title: "Quality Guaranteed",
+                description: "We ensure all our books meet the highest quality standards before they reach your hands.",
+                color: "from-emerald-500 to-cyan-500"
+              }
+            ].map((feature, index) => (
+              <motion.div 
+                key={index}
+                variants={item}
+                whileHover={{ y: -10, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
+                className="group"
+              >
+                <div className="h-full bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 p-0.5">
+                  <div className="bg-gradient-to-br rounded-2xl p-6 h-full">
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-300`}>
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                    <p className="text-gray-600 mb-6">{feature.description}</p>
+                    <div className="flex items-center text-indigo-600 font-medium">
+                      <span className="mr-2">Learn more</span>
+                      <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* CTA Section */}
+      <motion.section 
+        className="relative overflow-hidden py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        
+        <div className="relative container mx-auto px-6 z-10">
+          <motion.div 
+            className="max-w-4xl mx-auto text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Ready to start reading?</h2>
+            <p className="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Join our community of book lovers and discover your next favorite story. Sign up now and get 15% off your first order!
+            </p>
+            
+            <motion.div 
+              className="flex flex-col sm:flex-row justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                <Link 
+                  to="/signup" 
+                  className="inline-block px-8 py-4 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  Get Started Free
+                </Link>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                <Link 
+                  to="/books" 
+                  className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300 group"
+                >
+                  Browse Collection
+                  <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            </motion.div>
+            
+            <motion.div 
+              className="mt-8 flex flex-wrap justify-center gap-4 text-indigo-100 text-sm"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+            >
+              <div className="flex items-center">
+                <svg className="h-5 w-5 text-green-300 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                No credit card required
+              </div>
+              <div className="flex items-center">
+                <svg className="h-5 w-5 text-green-300 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Cancel anytime
+              </div>
+            </motion.div>
+          </motion.div>
+          
+          {/* Decorative elements */}
+          <motion.div 
+            className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full filter blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          />
+          <motion.div 
+            className="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-300/20 rounded-full filter blur-3xl"
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.1, 0.15, 0.1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          />
+        </div>
+      </motion.section>
+    </div>
   );
 };
 

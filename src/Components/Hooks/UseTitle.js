@@ -1,9 +1,9 @@
-// const { useEffect } = require("react");
+import { useEffect } from 'react';
 
-// const useTitle = (title) => {
-//   useEffect(() => {
-//     document.title = `${title}-Bookify`;
-//   }, [title]);
-// };
+const useTitle = (title) => {
+  useEffect(() => {
+    document.title = `${title} - Bookify`;
+  }, [title]);
+};
 
-// export default useTitle;
+export default useTitle;
