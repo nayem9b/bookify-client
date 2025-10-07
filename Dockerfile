@@ -7,17 +7,13 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies with legacy peer deps
 RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application
 COPY . .
 
-# Fix for path resolution issues in the build
-RUN npm install -g patch-package && \
-    npm run postinstall
-
-# Build the application
+# Build the application with production optimizations
 RUN npm run build
 
 # Production stage
