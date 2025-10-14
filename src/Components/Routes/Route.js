@@ -22,6 +22,8 @@ import SignUp from "../SignUp/SignUp";
 import SimplePage from "../SimplePage/SimplePage";
 import PerCategoryPage from "../Trial/PerCategoryPage/PerCategoryPage";
 import Wishlist from "../Wishlist/Wishlist";
+import CategoriesPage from "../CategoriesPage/CategoriesPage";
+import BooksPage from "../BooksPage/BooksPage";
 import AdminRoute from "./AdminRoute";
 import BuyerRoute from "./BuyerRoute";
 import PrivateRoute from "./PrivateRoute";
@@ -66,6 +68,14 @@ export const router = createBrowserRouter([
       {
         path: "/signup",
         element: <SignUp></SignUp>,
+      },
+      {
+        path: "/categories",
+        element: <CategoriesPage></CategoriesPage>,
+      },
+      {
+        path: "/books",
+        element: <BooksPage></BooksPage>,
       },
       {
         path: "/payment",
