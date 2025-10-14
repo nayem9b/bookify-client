@@ -235,8 +235,11 @@ const Navbar = () => {
             </div>
           )}
         </div>
+        
       </div>
+      <CartSidebar />
     </header>
+    
   );
 };
 
