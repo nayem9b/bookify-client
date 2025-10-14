@@ -30,7 +30,7 @@ COPY --from=builder /myapp/build ./build
 COPY --from=builder /myapp/public ./public
 
 # Optional: copy configuration files if you use custom scripts
-COPY --from=builder /myapp/.env* ./ || true
+COPY --from=builder /myapp/.env.local ./ || true
 
 # Create non-root user for security
 RUN addgroup -S nodejs && adduser -S nodejs -G nodejs
