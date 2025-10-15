@@ -95,7 +95,7 @@ const SignIn = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <motion.div 
-        className="max-w-6xl mx-auto"
+        className="max-w-6xl mx-auto mt-16 "
         initial="hidden"
         animate={isMounted ? "show" : "hidden"}
         variants={container}
@@ -106,56 +106,66 @@ const SignIn = () => {
             className="hidden lg:flex flex-1 max-w-xl xl:max-w-2xl"
             variants={item}
           >
-            <div className="w-full h-full p-8">
-              <div className="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-700 p-12 overflow-hidden">
-                <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(180deg,white,transparent)]"></div>
-                <div className="relative z-10 h-full flex flex-col justify-center">
-                  <div className="mb-12">
-                    <h2 className="text-4xl font-bold text-white mb-4 leading-tight">Welcome Back</h2>
-                    <p className="text-indigo-100 text-lg">Your personal library of knowledge awaits.</p>
-                  </div>
-                  
-                  <div className="space-y-6 mb-12">
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-white">Access Anywhere</h3>
-                        <p className="text-indigo-100 text-sm mt-1">Your books on all devices</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-white">Curated Collection</h3>
-                        <p className="text-indigo-100 text-sm mt-1">10,000+ titles across genres</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-white">Seamless Experience</h3>
-                        <p className="text-indigo-100 text-sm mt-1">Pick up where you left off</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-auto pt-8 border-t border-white/10">
-                    <p className="text-sm text-indigo-200">Join thousands of readers worldwide</p>
-                  </div>
-                </div>
-                
-                <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-indigo-400/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-                <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-400/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-              </div>
-            </div>
+           <div className="w-full h-full p-8 bg-white">
+  <div className="relative w-full h-full rounded-3xl bg-slate-50 border border-slate-200 overflow-hidden flex flex-col justify-between p-12">
+    
+    {/* Image Tiles Grid (soft overlay) */}
+    <div className="absolute inset-0 grid grid-cols-3 gap-2 opacity-100 pointer-events-none">
+      {[...Array(9)].map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl overflow-hidden"
+        >
+          <img
+            src={`https://picsum.photos/seed/${i + 1}/400/400`}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+
+    {/* Soft overlay tint */}
+    <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
+
+    {/* Text content */}
+    <div className="relative z-10 flex flex-col justify-center h-full">
+      <div className="mb-12">
+        <h2 className="text-4xl font-bold text-slate-800 mb-4 leading-tight tracking-tight">
+          Welcome Back
+        </h2>
+        <p className="text-slate-600 text-lg max-w-sm">
+          Rediscover your world of stories — calm, intuitive, and made for focused reading.
+        </p>
+      </div>
+
+      <div className="space-y-6 mb-12">
+        {/* <div>
+          <h3 className="font-semibold text-slate-800">Access Anywhere</h3>
+          <p className="text-slate-600 text-sm mt-1">Your library syncs seamlessly across devices.</p>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-slate-800">Curated Collection</h3>
+          <p className="text-slate-600 text-sm mt-1">Over 10,000 handpicked titles for every reader.</p>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-slate-800">Seamless Experience</h3>
+          <p className="text-slate-600 text-sm mt-1">Resume your reading effortlessly, anytime.</p>
+        </div> */}
+      </div>
+
+      <div className="mt-auto pt-8 border-t border-slate-200">
+        <p className="text-sm text-slate-500">
+          Join a global community of lifelong learners.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
           </motion.div>
 
           {/* Right side - Form */}
@@ -185,8 +195,8 @@ const SignIn = () => {
                       Bookify
                     </span>
                   </div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-                  <p className="text-gray-500">Sign in to continue your reading journey</p>
+                  {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+                  <p className="text-gray-500">Sign in to continue your reading journey</p> */}
                 </motion.div>
 
                 <form onSubmit={handleEmailLogin} className="space-y-6">

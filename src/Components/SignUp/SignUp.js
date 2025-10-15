@@ -194,7 +194,7 @@ const SignUp = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 flex items-center justify-center p-4 md:p-8'>
-      <div className='relative w-full max-w-5xl'>
+      <div className='relative w-full max-w-5xl mt-16'>
         {/* Back button */}
         <motion.button
           onClick={() => navigate(-1)}
@@ -232,9 +232,9 @@ const SignUp = () => {
               
               <div className='space-y-4'>
                 {[
-                  { icon: '📚', text: 'Discover thousands of books' },
-                  { icon: '🚀', text: 'Fast and secure checkout' },
-                  { icon: '🎁', text: 'Exclusive member benefits' }
+                  { icon: '', text: 'Discover thousands of books' },
+                  { icon: '', text: 'Fast and secure checkout' },
+                  { icon: '', text: 'Exclusive member benefits' }
                 ].map((item, index) => (
                   <motion.div 
                     key={index}
@@ -283,7 +283,7 @@ const SignUp = () => {
               variants={itemVariants}
             >
               <label className='block text-sm font-medium text-gray-700 mb-2'>
-                I want to join as a
+                Join as a
               </label>
               <div className='grid grid-cols-2 gap-4'>
                 {['Buyer', 'Seller'].map((userRole) => (
@@ -317,7 +317,7 @@ const SignUp = () => {
                 className='space-y-5'
               >
                 {/* Profile Picture Upload */}
-                <motion.div variants={itemVariants} className='flex flex-col items-center'>
+                {/* <motion.div variants={itemVariants} className='flex flex-col items-center'>
                   <label className='block text-sm font-medium text-gray-700 mb-2 self-start'>
                     Profile Picture
                     <span className='text-red-500 ml-1'>*</span>
@@ -350,7 +350,7 @@ const SignUp = () => {
                       />
                     </label>
                   </div>
-                </motion.div>
+                </motion.div> */}
 
                 {/* Full Name */}
                 <motion.div variants={itemVariants} className='relative'>

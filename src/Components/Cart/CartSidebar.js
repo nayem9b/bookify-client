@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaPlus, FaMinus, FaTrash, FaShoppingCart, FaLock } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toggleCart, removeFromCart, updateQuantity, clearCart } from '../../redux/slices/cartSlice';
 
 const CartSidebar = () => {
@@ -146,12 +146,14 @@ const CartSidebar = () => {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
                   <p className="text-gray-500 mb-6">Add some items to get started</p>
+                  <Link to="/books">
                   <button
                     onClick={() => dispatch(toggleCart())}
                     className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
                     Browse Products
                   </button>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -161,9 +163,9 @@ const CartSidebar = () => {
                       className="flex items-start p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
                     >
                       <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden mr-4">
-                        {item.image ? (
+                        {item.image_url ? (
                           <img
-                            src={item.image}
+                            src={item.image_url}
                             alt={item.title}
                             className="w-full h-full object-cover"
                           />

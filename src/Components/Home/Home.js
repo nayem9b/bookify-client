@@ -5,6 +5,7 @@ import { AuthContext } from "../Context/UserContext";
 import { motion } from "framer-motion";
 import { FiSearch, FiBookOpen, FiStar, FiClock, FiTrendingUp, FiArrowRight, FiAward, FiUsers, FiBookmark, FiBook } from "react-icons/fi";
 import reading from "../../Images/reading.jpg"
+import PartneredWith from "../PartneredWith/partneredWith";
 
 // Animation variants
 const container = {
@@ -381,7 +382,11 @@ const Home = () => {
           </motion.div>
         </div>
       </motion.section>
+      
+      {/* Partnered with
+       */}
 
+        <PartneredWith/>
       {/* Features */}
       <motion.section 
         className="py-20 bg-white"
