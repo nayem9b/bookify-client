@@ -26,6 +26,7 @@ import BuyerRoute from "./BuyerRoute";
 import PrivateRoute from "./PrivateRoute";
 import SellerRoute from "./SellerRoute";
 import BookDetailsPage from "../BookDetailsPage/BookDetailsPage";
+import Subscription from '../subscription/Subscription';
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
       {
         path: "/payment",
         element: <Payment></Payment>,
+      },
+      {
+        path: "/subscription",
+        element: <Subscription/>,
       },
       {
         path: "/blogs",

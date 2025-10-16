@@ -7,6 +7,7 @@ import { FiSearch, FiBookOpen, FiStar, FiClock, FiTrendingUp, FiArrowRight, FiAw
 import reading from "../../Images/reading.jpg"
 import PartneredWith from "../PartneredWith/partneredWith";
 import ProductCards from "../FeaturedProducts/ProductCard";
+import ViewSubscription from "../subscription/ViewSubscription";
 
 // Animation variants
 const container = {
@@ -561,6 +562,8 @@ const Home = () => {
           />
         </div>
       </motion.section>
+        
+      <ViewSubscription/>
 
       {/* Testimonials */}
       <motion.section 

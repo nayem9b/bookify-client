@@ -110,7 +110,6 @@ const SignUp = () => {
     const email = form.email.value;
     const password = form.password.value;
     const confirmPassword = form.passwordConfirmation.value;
-    const image = form.image.files[0];
 
     // Reset states
     setIsLoading(true);
@@ -128,31 +127,13 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      // Upload image if selected
-      let imageUrl = '';
-      if (image) {
-        const formData = new FormData();
-        formData.append("image", image);
-        
-        const response = await fetch(
-          `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_IMG_BB_KEY}`,
-          { method: "POST", body: formData }
-        );
-        
-        const imgData = await response.json();
-        if (!imgData.success) throw new Error('Image upload failed');
-        imageUrl = imgData.data.url;
-      }
-
-      // Create user account
+       // Create user account
       const userCredential = await userSignUp(email, password);
       const user = userCredential.user;
       
       // Update user profile
       await updateProfile(auth.currentUser, {
         displayName: fullName,
-        photoURL: imageUrl || undefined
       });
 
       // Save additional user info to database
@@ -160,10 +141,9 @@ const SignUp = () => {
         name: fullName,
         email: email,
         role: role,
-        image: imageUrl || '',
       };
 
-      await fetch(`http://localhost:5000/userInfo`, {
+      await fetch(`http://localhost:5000/api/users/register`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(userInfo),
@@ -172,12 +152,6 @@ const SignUp = () => {
       // Success!
       toast.success('Account created successfully!');
       navigate(from, { replace: true });
-    } catch (error) {
-      console.error('Sign up error:', error);
-      toast.error(error.message || 'Failed to create account');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   // Toggle password visibility
