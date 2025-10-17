@@ -113,7 +113,6 @@ const SignUp = () => {
 
     // Reset states
     setIsLoading(true);
-
     // Validation
     if (password !== confirmPassword) {
       toast.error("Passwords don't match!");
@@ -127,10 +126,11 @@ const SignUp = () => {
       return;
     }
 
-       // Create user account
+    try {
+      // Create user account
       const userCredential = await userSignUp(email, password);
       const user = userCredential.user;
-      
+
       // Update user profile
       await updateProfile(auth.currentUser, {
         displayName: fullName,
@@ -152,6 +152,32 @@ const SignUp = () => {
       // Success!
       toast.success('Account created successfully!');
       navigate(from, { replace: true });
+    } catch (error) {
+      // Handle firebase errors gracefully
+      console.error('Sign up error:', error);
+
+      // Default message
+      let message = error?.message || 'Failed to create account';
+
+      // Firebase auth errors sometimes include codes
+      const code = error?.code || '';
+
+      if (code === 'auth/email-already-in-use' || message.includes('email-already-in-use')) {
+        // Friendly toast and redirect option
+        toast.error('This email is already registered. Please sign in or use a different email.');
+        // Optionally redirect to sign in page after short delay
+        setTimeout(() => navigate('/signin'), 1500);
+      } else if (code === 'auth/invalid-email' || message.toLowerCase().includes('invalid-email')) {
+        toast.error('Please provide a valid email address.');
+      } else if (code === 'auth/weak-password' || message.toLowerCase().includes('weak-password')) {
+        toast.error('Password is too weak. Use at least 6 characters.');
+      } else {
+        // Generic fallback
+        toast.error(message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Toggle password visibility
@@ -260,7 +286,7 @@ const SignUp = () => {
                 Join as a
               </label>
               <div className='grid grid-cols-2 gap-4'>
-                {['Buyer', 'Seller'].map((userRole) => (
+                {['buyer', 'seller'].map((userRole) => (
                   <motion.div 
                     key={userRole}
                     whileHover={{ scale: 1.02 }}
@@ -273,10 +299,10 @@ const SignUp = () => {
                         <div className='w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' />
                       )}
                     </div>
-                    <div className='text-3xl mb-2'>{userRole === 'Buyer' ? '📖' : '🏪'}</div>
+                    <div className='text-3xl mb-2'>{userRole === 'buyer' ? '📖' : '🏪'}</div>
                     <div className='font-medium text-gray-900'>{userRole}</div>
                     <div className='text-xs text-gray-500 mt-1'>
-                      {userRole === 'Buyer' ? 'Browse and buy books' : 'Sell your books'}
+                      {userRole === 'buyer' ? 'Browse and buy books' : 'Sell your books'}
                     </div>
                   </motion.div>
                 ))}

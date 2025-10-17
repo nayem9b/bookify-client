@@ -27,6 +27,7 @@ import PrivateRoute from "./PrivateRoute";
 import SellerRoute from "./SellerRoute";
 import BookDetailsPage from "../BookDetailsPage/BookDetailsPage";
 import Subscription from '../subscription/Subscription';
+import AddProduct from '../AddAProduct/AddProduct';
 
 export const router = createBrowserRouter([
   {
@@ -141,9 +142,9 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/addaproduct",
         element: (
-          <SellerRoute>
-            <AddAProduct></AddAProduct>
-          </SellerRoute>
+          
+            <AddProduct/>
+       
         ),
       },
     ],
