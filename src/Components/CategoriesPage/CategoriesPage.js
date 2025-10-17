@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Breadcrumbs from '../Common/Breadcrumbs';
 
 const CategoriesPage = () => {
   const [categories] = useState([
@@ -16,7 +17,10 @@ const CategoriesPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 mt-24">
+        <div className="text-left mb-6 mt-24">
+          <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/categories', label: 'Categories' }]} />
+        </div>
+        <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
             Explore Our Categories
           </h1>

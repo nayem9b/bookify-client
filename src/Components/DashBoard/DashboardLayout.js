@@ -15,7 +15,6 @@ const DashboardLayout = () => {
   const [isBuyer] = useBuyer(user?.email);
   const [isSeller] = useSeller(user?.email);
 
-  console.log(user);
 
   const menuItems = [
     {
@@ -28,37 +27,37 @@ const DashboardLayout = () => {
       title: "All Buyers",
       path: "/dashboard/allbuyers",
       icon: <FiUsers className="w-5 h-5" />,
-      visible: isAdmin
+      visible: true
     },
     {
       title: "All Sellers",
       path: "/dashboard/allsellers",
       icon: <FiUsers className="w-5 h-5" />,
-      visible: isAdmin
+      visible: true
     },
     {
       title: "My Orders",
       path: "/dashboard/myorders",
       icon: <FiPackage className="w-5 h-5" />,
-      visible: isBuyer
+      visible: true
     },
     {
       title: "Wishlist",
       path: "/dashboard/wishlist",
       icon: <FiHeart className="w-5 h-5" />,
-      visible: isBuyer
+      visible: true
     },
     {
       title: "My Products",
       path: "/dashboard/myproducts",
       icon: <FiPackage className="w-5 h-5" />,
-      visible: isSeller
+      visible: true
     },
     {
       title: "Add Product",
       path: "/dashboard/addaproduct",
       icon: <FiPlusCircle className="w-5 h-5" />,
-      visible: isSeller
+      visible: true
     }
   ];
 

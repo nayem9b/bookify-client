@@ -1,7 +1,8 @@
 import { Button } from "./Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./CardSubscription";
 import { Check, BookOpen, Sparkles, Crown } from "lucide-react";
-import { Link } from "react-router-dom";
+// Link import removed — not needed in this component
+import Breadcrumbs from "../Common/Breadcrumbs";
 
 const Subscription = () => {
   const plans = [
@@ -90,6 +91,9 @@ const Subscription = () => {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center max-w-4xl">
+          <div className="text-left mb-6">
+            <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/subscription', label: 'Subscription' }]} />
+          </div>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Choose Your Reading Journey
           </h1>

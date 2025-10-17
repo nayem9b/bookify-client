@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
 const SignIn = () => {
-  const { googleSignIn, userSignIn } = useContext(AuthContext);
+  const { googleSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
@@ -64,29 +64,33 @@ const SignIn = () => {
   const handleEmailLogin = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-    
     try {
       const form = event.target;
       const email = form.email.value;
       const password = form.password.value;
-      
-      const result = await userSignIn(email, password);
-      const user = result.user;
-      const currentUser = { email: user.email };
-      
-      const response = await fetch("https://server-side-nayem9b.vercel.app/jwt", {
+
+      const API_BASE = process.env.REACT_APP_API_URL || "/api";
+      const res = await fetch(`${API_BASE}/users/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(currentUser),
+        body: JSON.stringify({ email, password }),
       });
-      
-      const data = await response.json();
-      localStorage.setItem("jwt-token", data.token);
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Invalid credentials");
+      }
+
+      const data = await res.json();
+      // data should include { token, user }
+      if (data.token) {
+        localStorage.setItem("jwt-token", data.token);
+      }
       navigate(from, { replace: true });
       toast.success("Successfully signed in!");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to sign in. Please check your credentials and try again.");
+      toast.error(error.message || "Failed to sign in. Please check your credentials and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -236,9 +240,9 @@ const SignIn = () => {
                         Password
                       </label>
                       <div className="text-sm">
-                        <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                          Forgot password?
-                        </a>
+                          <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                            Forgot password?
+                          </Link>
                       </div>
                     </div>
                     <motion.div 
