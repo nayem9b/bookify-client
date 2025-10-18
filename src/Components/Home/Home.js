@@ -312,104 +312,158 @@ const Home = () => {
       </motion.section>
 
       {/* Featured Books */}
-      {/* <motion.section 
-        className="py-20 bg-gradient-to-br from-gray-50 to-indigo-50"
+      {/* Featured Books - Modern Design */}
+      <motion.section
+        className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-indigo-50/30"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.8 }}
       >
-        <div className="container mx-auto px-6">
-          <motion.div 
-            className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header with animated underline */}
+          <motion.div
+            className="text-center mb-16"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="mb-6 md:mb-0">
-              <h2 className="text-4xl font-bold text-gray-900 mb-2">Featured Books</h2>
-              <p className="text-gray-600 text-lg">Handpicked selection of must-read titles</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 relative inline-block">
+              Trending Now
+              <motion.span
+                className="absolute -bottom-2 left-0 w-full h-1 bg-indigo-500"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              />
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
+              Discover the most popular books our readers can't put down
+            </p>
+          </motion.div>
+
+          {/* Book Grid with staggered animation */}
+          <div className="relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredBooks?.slice(0, 4).map((book, index) => (
+                <motion.div
+                  key={book?._id || index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
+                  }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  whileHover={{
+                    y: -8,
+                    transition: {
+                      duration: 0.3,
+                      ease: "easeOut",
+                    },
+                  }}
+                  className="group"
+                >
+                  <div className="h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-indigo-100">
+                    {/* Image with gradient overlay */}
+                    <div className="relative pt-[140%] overflow-hidden">
+                      <img
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        src={book?.image || "/placeholder-book.jpg"}
+                        alt={book?.title || "Book Cover"}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/placeholder-book.jpg";
+                        }}
+                      />
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      {/* Category badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1 text-xs font-semibold bg-white/90 text-indigo-600 rounded-full backdrop-blur-sm">
+                          Bestseller
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                          {book?.title || "Untitled Book"}
+                        </h3>
+                        <p className="text-indigo-600 font-medium mb-3">
+                          {book?.author || "Unknown Author"}
+                        </p>
+                        <div className="flex items-center mb-4">
+                          <div className="flex text-amber-400">
+                            {[...Array(5)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className="w-5 h-5 fill-current"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-500 ml-2">
+                            (24)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div>
+                          <span className="text-2xl font-bold text-gray-900">
+                            ${book?.price?.toFixed(2) || "0.00"}
+                          </span>
+                          {book?.originalPrice && (
+                            <span className="ml-2 text-sm text-gray-400 line-through">
+                              ${book.originalPrice.toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="relative px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm font-semibold rounded-lg overflow-hidden group"
+                        >
+                          <span className="relative z-10">Add to Cart</span>
+                          <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-            <motion.div whileHover={{ x: 5 }}>
-              <Link to="/books" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium text-lg group">
-                View all books
+
+            {/* View All Button */}
+            <motion.div
+              className="text-center mt-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              <Link
+                to="/books"
+                className="inline-flex items-center px-8 py-3.5 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-full hover:bg-indigo-50 transition-colors duration-300 group"
+              >
+                Browse All Books
                 <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </motion.div>
-          </motion.div>
-          
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {featuredBooks?.slice(0, 4).map((book, index) => (
-              <motion.div 
-                key={book?._id || index}
-                variants={item}
-                whileHover={{ y: -10, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
-                className="group"
-              >
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                  <div className="relative pb-[150%] overflow-hidden">
-                    <img 
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                      src={book?.image || 'Hello'} 
-                      alt={book?.title || 'Book Cover'}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '';
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-4 w-full">
-                      <div className="flex items-center">
-                        <div className="flex items-center text-yellow-400">
-                          {[...Array(5)].map((_, i) => (
-                            <FiStar key={i} className="w-4 h-4 fill-current" />
-                          ))}
-                          <span className="ml-2 text-white text-sm font-medium">{book?.rating || '4.8'}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <motion.button 
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-white/90 hover:bg-white text-indigo-600 p-2 rounded-full shadow-lg"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </motion.button>
-                    </div>
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-2 h-14">{book?.title || 'Untitled Book'}</h3>
-                    <p className="text-gray-600 text-sm mb-4">by {book?.author || 'Unknown Author'}</p>
-                    <div className="mt-auto flex justify-between items-center">
-                      <span className="text-xl font-bold text-indigo-600">${book?.price?.toFixed(2) || '0.00'}</span>
-                      <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Add to Cart
-                      </motion.button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          </div>
         </div>
-      </motion.section> */}
+      </motion.section>
 
       <ProductCards />
 
