@@ -298,7 +298,7 @@ const Home = () => {
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <div className="absolute inset-0 bg-white/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <FiBookOpen className="h-10 w-10 text-white z-10" />
+                    <FiBookOpen className="h-10 w-10 text-indigo-600 z-10" />
                     <motion.div
                       className="absolute -inset-1 bg-white/40 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-1000"
                       initial={{ scale: 0.8, opacity: 0 }}
@@ -308,7 +308,7 @@ const Home = () => {
                   </motion.div>
 
                   <motion.h3
-                    className="font-bold text-white text-lg mb-2"
+                    className="font-bold text-gray-800 text-lg mb-2"
                     initial={{ y: 10, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     viewport={{ once: true }}
@@ -318,13 +318,13 @@ const Home = () => {
                   </motion.h3>
 
                   <motion.div
-                    className="text-sm text-indigo-100 font-medium px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-full inline-flex items-center"
+                    className="text-sm text-indigo-600 font-medium px-3 py-1.5 bg-indigo-50 backdrop-blur-sm rounded-full inline-flex items-center"
                     initial={{ y: 10, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 + index * 0.05 }}
                   >
-                    <span className="w-1.5 h-1.5 bg-white rounded-full mr-2"></span>
+                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mr-2"></span>
                     {category?.count || 0}{" "}
                     {category?.count === 1 ? "book" : "books"}
                   </motion.div>

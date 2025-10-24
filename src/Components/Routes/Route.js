@@ -29,6 +29,8 @@ import BookDetailsPage from "../BookDetailsPage/BookDetailsPage";
 import Subscription from "../subscription/Subscription";
 import AddProduct from "../AddAProduct/AddProduct";
 import AllProducts from "../AllProducts/AllProducts";
+import About from "../About/About";
+import Contact from "../Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +68,14 @@ export const router = createBrowserRouter([
       {
         path: "/books",
         element: <BooksPage></BooksPage>,
+      },
+      {
+        path: "/about",
+        element: <About/>,
+      },
+      {
+        path: "/contact",
+        element: <Contact/>,
       },
       {
         path: "/payment",

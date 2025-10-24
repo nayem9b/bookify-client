@@ -36,6 +36,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isDiscoverOpen, setIsDiscoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { user, logout } = useContext(AuthContext);
   const dispatch = useDispatch();
@@ -46,15 +47,15 @@ const Navbar = () => {
   // Close dropdowns when clicking outside
   const userMenuRef = useRef(null);
   const categoriesMenuRef = useRef(null);
+  const discoverMenuRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Only handle click outside for user menu (which should remain click-based)
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
-      if (categoriesMenuRef.current && !categoriesMenuRef.current.contains(event.target)) {
-        setIsCategoriesOpen(false);
-      }
+      // Categories and Discover are now hover-based, so we don't need click outside detection for them
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -107,9 +108,57 @@ const Navbar = () => {
     { name: "Audio Books", icon: <FiBookOpen className="w-4 h-4" />, path: "/audiobooks" },
   ];
 
+  const discoverItems = [
+    { 
+      name: "Trending Now", 
+      icon: <FiTrendingUp className="w-4 h-4" />, 
+      path: "/trending",
+      description: "What's popular right now"
+    },
+    { 
+      name: "Editor's Choice", 
+      icon: <FiStar className="w-4 h-4" />, 
+      path: "/editors-choice",
+      description: "Handpicked by our experts"
+    },
+    { 
+      name: "Book of the Month", 
+      icon: <FiAward className="w-4 h-4" />, 
+      path: "/book-of-month",
+      description: "Featured monthly selection"
+    },
+    { 
+      name: "Reading Lists", 
+      icon: <FiBookmark className="w-4 h-4" />, 
+      path: "/reading-lists",
+      description: "Curated collections"
+    },
+    { 
+      name: "Author Spotlights", 
+      icon: <FiUser className="w-4 h-4" />, 
+      path: "/authors",
+      description: "Meet your favorite authors"
+    },
+    { 
+      name: "Book Clubs", 
+      icon: <FiBookOpen className="w-4 h-4" />, 
+      path: "/book-clubs",
+      description: "Join reading communities"
+    },
+  ];
+
+  const additionalNavItems = [
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Blog", path: "/blog" },
+    { name: "Help Center", path: "/help" },
+  ];
+
   return (
-    <header className="fixed w-full z-50 bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="fixed w-full z-50 bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20">
+      {/* Glassmorphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-white/40 pointer-events-none"></div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
@@ -140,11 +189,13 @@ const Navbar = () => {
             </Link>
 
             {/* Categories Dropdown */}
-            <div className="relative" ref={categoriesMenuRef}>
-              <button
-                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium"
-              >
+            <div 
+              className="relative" 
+              ref={categoriesMenuRef}
+              onMouseEnter={() => setIsCategoriesOpen(true)}
+              onMouseLeave={() => setIsCategoriesOpen(false)}
+            >
+              <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium">
                 <FiList className="w-4 h-4" />
                 <span>Categories</span>
                 <FiChevronDown className={`w-4 h-4 transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`} />
@@ -192,13 +243,68 @@ const Navbar = () => {
               <span>Books</span>
             </Link>
 
-            {/* Quick Links Dropdown */}
-            <div className="relative">
+            {/* Discover Dropdown */}
+            <div 
+              className="relative" 
+              ref={discoverMenuRef}
+              onMouseEnter={() => setIsDiscoverOpen(true)}
+              onMouseLeave={() => setIsDiscoverOpen(false)}
+            >
               <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium">
                 <FiTrendingUp className="w-4 h-4" />
                 <span>Discover</span>
-                <FiChevronDown className="w-4 h-4" />
+                <FiChevronDown className={`w-4 h-4 transition-transform ${isDiscoverOpen ? 'rotate-180' : ''}`} />
               </button>
+
+              <AnimatePresence>
+                {isDiscoverOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+                  >
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Discover More</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        {discoverItems.map((item, index) => (
+                          <Link
+                            key={index}
+                            to={item.path}
+                            className="flex items-start space-x-3 p-4 rounded-lg hover:bg-indigo-50 transition-colors group"
+                            onClick={() => setIsDiscoverOpen(false)}
+                          >
+                            <div className="text-indigo-600 group-hover:text-indigo-700 mt-1">
+                              {item.icon}
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-gray-700 group-hover:text-indigo-700 font-medium block">
+                                {item.name}
+                              </span>
+                              <span className="text-sm text-gray-500 group-hover:text-indigo-600">
+                                {item.description}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Additional Navigation Items */}
+            <div className="flex items-center space-x-6">
+              {additionalNavItems.map((item, index) => (
+                <Link
+                  key={index}
+                  to={item.path}
+                  className="text-gray-700 hover:text-indigo-600 transition-colors font-medium"
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
           </div>
 
@@ -411,6 +517,46 @@ const Navbar = () => {
                   <FiList className="w-5 h-5 text-indigo-600" />
                   <span className="font-medium text-gray-900">Categories</span>
                 </Link>
+
+                {/* Additional Navigation Items for Mobile */}
+                <div className="border-t border-gray-200 pt-4">
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">More</h3>
+                  <div className="space-y-2">
+                    {additionalNavItems.map((item, index) => (
+                      <Link
+                        key={index}
+                        to={item.path}
+                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <span className="font-medium text-gray-900">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Discover Section */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Discover</h3>
+                <div className="space-y-2">
+                  {discoverItems.map((item, index) => (
+                    <Link
+                      key={index}
+                      to={item.path}
+                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="text-indigo-600 mt-1">
+                        {item.icon}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-medium text-gray-900 block">{item.name}</span>
+                        <span className="text-sm text-gray-500">{item.description}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               {/* Quick Links */}
