@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from './slices/cartSlice';
+import wishlistReducer from './slices/wishlistSlice';
 import { combineReducers } from 'redux';
 
 import {
@@ -17,11 +18,12 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['cart'], // only persist the cart slice
+  whitelist: ['cart', 'wishlist'], // persist the cart and wishlist slices
 };
 
 const rootReducer = {
   cart: cartReducer,
+  wishlist: wishlistReducer,
 };
 // Because our store uses configureStore with an object of slice reducers, we'll create a combined reducer function
 const combinedReducer = combineReducers(rootReducer);

@@ -30,6 +30,8 @@ import { toggleCart } from "../../redux/slices/cartSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import navicon from "../../Images/icons8-open-book-64.png";
 import CartSidebar from "../Cart/CartSidebar";
+import WishlistSidebar from "../Wishlist/WishlistSidebar";
+import { toggleWishlist } from '../../redux/slices/wishlistSlice';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +45,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items } = useSelector((state) => state.cart);
+  const wishlistCount = useSelector((state) => (state.wishlist && state.wishlist.items) ? state.wishlist.items.length : 0);
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   // Close dropdowns when clicking outside
@@ -336,15 +339,16 @@ const Navbar = () => {
             </button>
 
             {/* Wishlist */}
-            <Link
-              to="/wishlist"
+            <button
+              onClick={() => dispatch(toggleWishlist())}
               className="hidden md:block p-2 text-gray-600 hover:text-indigo-600 transition-colors relative"
+              aria-label="Open wishlist"
             >
               <FiHeart className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-500 rounded-full h-4 w-4 flex items-center justify-center">
-                3
+                {wishlistCount}
               </span>
-            </Link>
+            </button>
 
             {/* Notifications */}
             <button className="hidden md:block p-2 text-gray-600 hover:text-indigo-600 transition-colors relative">
@@ -625,7 +629,8 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      <CartSidebar />
+  <CartSidebar />
+  <WishlistSidebar />
     </header>
   );
 };
