@@ -109,7 +109,7 @@ const Home = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 -skew-y-3 transform origin-top-left"></div>
 
-        <div className="relative container mx-auto px-6 py-24 md:py-32 lg:flex lg:items-center lg:justify-between">
+        <div className="relative container mx-auto px-6 py-4 md:py-32 lg:flex lg:items-center lg:justify-between mt-[-100px]">
           <motion.div
             variants={fadeIn}
             initial="hidden"
@@ -208,8 +208,9 @@ const Home = () => {
                   alt="Reading"
                   className="rounded-lg max-w-sm w-full h-auto shadow-lg"
                 />
-
+                
                 <div className="absolute -bottom-4 -right-4 bg-white p-3 rounded-full shadow-xl">
+                  
                   <div className="bg-indigo-600 text-white p-2 rounded-full">
                     <FiBookOpen className="h-6 w-6" />
                   </div>
@@ -1490,7 +1491,19 @@ const Home = () => {
                   <motion.div
                     key={index}
                     className="flex-shrink-0 w-96 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 hover:shadow-2xl transition-all duration-300 group cursor-pointer"
-                    // whileHover={{ y: -8, scale: 1.02 }}
+                    // subtle floating animation (no size changes)
+                    animate={{
+                      y: [0, -6, 0],
+                      rotate: [0, -0.6, 0],
+                    }}
+                    transition={{
+                      duration: 6,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut",
+                      delay: index * 0.35,
+                    }}
+                    whileHover={{ y: -8, scale: 1.02 }}
                     onClick={() =>
                       window.open(
                         `https://x.com/${testimonial.twitter.replace("@", "")}`,

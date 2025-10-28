@@ -100,7 +100,7 @@ const SignUp = () => {
         signedBy: "google",
         password : "sdjfoshdfohasdnkjalsndn"
       };
-      console.log(user,userInfo);
+    
       // Save user info to backend
       await fetch(`http://localhost:5000/api/users/register`, {
         method: "POST",
@@ -133,7 +133,6 @@ const SignUp = () => {
       setIsLoading(false);
       return;
     }
-
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters long!");
       setIsLoading(false);
@@ -152,13 +151,14 @@ const SignUp = () => {
           displayName: fullName,
         });
       }
-
+      
       // Save additional user info to database
       const userInfo = {
         name: fullName,
         email: email,
         role: role,
         password: password,
+        guid: user?.uid,
       };
 
       await fetch(`http://localhost:5000/api/users/register`, {

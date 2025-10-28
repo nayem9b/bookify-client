@@ -14,6 +14,7 @@ const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const BooksPage = () => {
   const [books, setBooks] = useState([]);
+  const [selectedBooks, setSelectedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +24,10 @@ const BooksPage = () => {
   const [showCategories, setShowCategories] = useState(true);
   const [isCategoryLoading, setIsCategoryLoading] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
+  // Sorting and price filter
+  const [sortOption, setSortOption] = useState("none"); // 'none' | 'price-asc' | 'price-desc'
+  const [priceFilter, setPriceFilter] = useState(null); // max price filter
+  const [maxAvailablePrice, setMaxAvailablePrice] = useState(0);
   const dispatch = useDispatch();
 
   // Extract unique categories from books
@@ -113,6 +118,8 @@ const BooksPage = () => {
   };
 
   const firstLoadRef = useRef(true);
+  // Reference to the main books grid so we can scroll it into view
+  const gridRef = useRef(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -136,13 +143,14 @@ const BooksPage = () => {
           url = `${API_BASE}/categories/${encoded}/books`;
         }
 
-        console.debug("Fetching books from:", url);
+        console.log("Fetching books from:", url);
 
         const response = await fetch(url, { signal: controller.signal });
         if (!response.ok) {
           throw new Error("Failed to fetch books");
         }
         const data = await response.json();
+        setSelectedBooks(data);
         // Support APIs that return either an array or an object { books: [...] }
         const payload = Array.isArray(data)
           ? data
@@ -186,11 +194,13 @@ const BooksPage = () => {
     return matchesSearch && matchesCategory;
   });
 
-  // Get current books
+  // Get current books (use selectedBooks if provided)
   const indexOfLastBook = currentPage * itemsPerPage;
   const indexOfFirstBook = indexOfLastBook - itemsPerPage;
-  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
-  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
+  const sourceBooks =
+    selectedBooks && selectedBooks.length ? selectedBooks : filteredBooks;
+  const currentBooks = sourceBooks.slice(indexOfFirstBook, indexOfLastBook);
+  const totalPages = Math.ceil((sourceBooks.length || 0) / itemsPerPage);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -307,8 +317,19 @@ const BooksPage = () => {
                             setIsCategoryLoading(true);
                             setSelectedCategory(category);
                             setCurrentPage(1);
-                            // small delay to show feedback
-                            setTimeout(() => setIsCategoryLoading(false), 220);
+                            // small delay to show feedback and then scroll the grid into view
+                            setTimeout(() => {
+                              setIsCategoryLoading(false);
+                              try {
+                                gridRef.current?.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "start",
+                                });
+                              } catch (e) {
+                                // defensive: ignore if DOM not available
+                                console.debug("scrollIntoView failed", e);
+                              }
+                            }, 220);
                           }}
                           aria-pressed={active}
                           className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all duration-150 focus:outline-none focus:ring-2 ${
@@ -320,13 +341,13 @@ const BooksPage = () => {
                           <span className="truncate max-w-[10rem]">
                             {category}
                           </span>
-                          <span
+                          {/* <span
                             className={`inline-block ml-1 text-xs px-2 py-0.5 rounded-full ${
                               active ? "bg-white/20" : "bg-white"
                             }`}
                           >
                             {count}
-                          </span>
+                          </span> */}
                         </button>
                       );
                     })}
@@ -470,7 +491,7 @@ const BooksPage = () => {
           </motion.div>
 
           {/* Books Grid */}
-          {filteredBooks?.length === 0 ? (
+          {sourceBooks.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -487,6 +508,7 @@ const BooksPage = () => {
           ) : (
             <>
               <motion.div
+                ref={gridRef}
                 variants={container}
                 initial="hidden"
                 animate="show"
@@ -612,10 +634,9 @@ const BooksPage = () => {
                     <span className="font-medium">{indexOfFirstBook + 1}</span>{" "}
                     to{" "}
                     <span className="font-medium">
-                      {Math.min(indexOfLastBook, filteredBooks.length)}
+                      {Math.min(indexOfLastBook, sourceBooks.length)}
                     </span>{" "}
-                    of{" "}
-                    <span className="font-medium">{filteredBooks.length}</span>{" "}
+                    of <span className="font-medium">{sourceBooks.length}</span>{" "}
                     results
                   </div>
 

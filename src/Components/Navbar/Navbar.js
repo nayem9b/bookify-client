@@ -71,7 +71,7 @@ const Navbar = () => {
       await logout();
       setIsMenuOpen(false);
       setIsUserMenuOpen(false);
-      toast.success("Logged out successfully!");
+      toast.success("Logged out!");
     } catch (error) {
       toast.error("Failed to log out. Please try again.");
     }
