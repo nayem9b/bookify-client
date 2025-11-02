@@ -122,7 +122,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              Discoverrrrrr Your Next{" "}
+              Disco Your Next{" "}
               <span className="text-yellow-300">Favorite</span> Book
             </motion.h1>
 
