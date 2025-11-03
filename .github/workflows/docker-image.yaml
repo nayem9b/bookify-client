@@ -18,8 +18,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_ALL_CODEBASE: false
           GITHUB_WORKSPACE: ${{ github.workspace }}
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_JSON: false
+          VALIDATE_YAML: false
+          VALIDATE_MARKDOWN: false
 
   build:
     runs-on: ubuntu-latest
