@@ -28,6 +28,7 @@ const BooksPage = () => {
   const [sortOption, setSortOption] = useState("none"); // 'none' | 'price-asc' | 'price-desc'
   const [priceFilter, setPriceFilter] = useState(null); // max price filter
   const [maxAvailablePrice, setMaxAvailablePrice] = useState(0);
+  
   const dispatch = useDispatch();
 
   // Extract unique categories from books
