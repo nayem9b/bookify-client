@@ -49,38 +49,110 @@ const WigglyArt = ({ className = "" }) => {
       aria-hidden
     >
       <svg
-        viewBox="0 0 400 300"
+        viewBox="0 0 500 400"
         preserveAspectRatio="none"
         className="w-full h-full"
       >
-        <path
-          d="M0,150 Q100,50 200,150 T400,150"
-          stroke="#3B82F6"
-          strokeWidth="8"
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FF6B35" stopOpacity="1" />
+            <stop offset="100%" stopColor="#FF8C42" stopOpacity="0.9" />
+          </linearGradient>
+          <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FF8C42" stopOpacity="1" />
+            <stop offset="100%" stopColor="#FFD700" stopOpacity="0.9" />
+          </linearGradient>
+          <linearGradient id="grad3" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FF6B35" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#FF1744" stopOpacity="0.85" />
+          </linearGradient>
+        </defs>
+
+        {/* Main flowing wiggly path 1 */}
+        <motion.path
+          d="M0,150 C80,80 120,60 200,100 C280,140 320,120 400,160 C450,190 480,140 500,180"
+          stroke="url(#grad1)"
+          strokeWidth="6"
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 3, ease: "easeInOut" }}
         />
-        <path
-          d="M0,100 Q100,200 200,100 T400,100"
-          stroke="#10B981"
-          strokeWidth="10"
+
+        {/* Flowing wiggly path 2 */}
+        <motion.path
+          d="M0,250 C90,220 150,240 250,200 C330,170 380,260 450,240 C470,235 490,245 500,250"
+          stroke="url(#grad2)"
+          strokeWidth="5"
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 3.5, ease: "easeInOut", delay: 0.3 }}
         />
-        <path
-          d="M0,200 Q100,100 200,200 T400,200"
-          stroke="#F59E0B"
-          strokeWidth="12"
+
+        {/* Flowing wiggly path 3 */}
+        <motion.path
+          d="M0,80 C110,120 180,40 280,90 C360,130 420,60 500,110"
+          stroke="url(#grad3)"
+          strokeWidth="4"
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 4, ease: "easeInOut", delay: 0.3 }}
         />
-        <path
-          d="M200,50 Q300,100 250,200 Q200,300 150,200 Q100,100 200,50"
-          fill="#EF4444"
-          opacity="0.18"
+
+        {/* Organic blob shapes */}
+        <motion.circle
+          cx="100"
+          cy="120"
+          r="35"
+          fill="#FF6B35"
+          opacity="0.25"
+          animate={{
+            r: [35, 45, 35],
+            opacity: [0.25, 0.35, 0.25],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+
+        <motion.circle
+          cx="400"
+          cy="280"
+          r="40"
+          fill="#EC4899"
+          opacity="0.08"
+          animate={{
+            r: [40, 50, 40],
+            opacity: [0.08, 0.18, 0.08],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 0.5,
+          }}
+        />
+
+        {/* Smooth flowing curves */}
+        <motion.path
+          d="M50,350 Q150,320 250,350 T450,350"
+          stroke="#8B5CF6"
+          strokeWidth="3"
+          fill="none"
+          opacity="0.5"
+          initial={{ pathLength: 0, opacity: 0.3 }}
+          animate={{ pathLength: 1, opacity: 0.6 }}
+          transition={{ duration: 2.5, ease: "easeInOut" }}
         />
       </svg>
     </div>
@@ -90,6 +162,7 @@ const WigglyArt = ({ className = "" }) => {
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     // Mock data for categories
@@ -104,7 +177,7 @@ const Home = () => {
     setCategories(mockCategories);
   }, []);
 
-  // Mock data for featured books
+  // Mock data for featured books with categories
   const featuredBooks = [
     {
       _id: 1,
@@ -112,7 +185,7 @@ const Home = () => {
       author: "John Doe",
       price: 24.99,
       rating: 4.8,
-      // image: 'https://source.unsplash.com/random/400x600/?book-cover,novel'
+      category: "Fiction",
     },
     {
       _id: 2,
@@ -120,7 +193,7 @@ const Home = () => {
       author: "Jane Smith",
       price: 19.99,
       rating: 4.5,
-      // image: 'https://source.unsplash.com/random/400x600/?book,technology'
+      category: "Technology",
     },
     {
       _id: 3,
@@ -128,7 +201,7 @@ const Home = () => {
       author: "Alex Johnson",
       price: 29.99,
       rating: 4.9,
-      // image: 'https://source.unsplash.com/random/400x600/?mystery,book'
+      category: "Mystery",
     },
     {
       _id: 4,
@@ -136,9 +209,49 @@ const Home = () => {
       author: "Sam Wilson",
       price: 34.99,
       rating: 4.7,
-      // image: 'https://source.unsplash.com/random/400x600/?ai,technology'
+      category: "Technology",
+    },
+    {
+      _id: 5,
+      title: "Einstein's Life",
+      author: "Marie Cole",
+      price: 21.99,
+      rating: 4.6,
+      category: "Biography",
+    },
+    {
+      _id: 6,
+      title: "Python Mastery",
+      author: "David Lee",
+      price: 39.99,
+      rating: 4.9,
+      category: "Technology",
+    },
+    {
+      _id: 7,
+      title: "The Midnight Library",
+      author: "Matt Haig",
+      price: 18.99,
+      rating: 4.7,
+      category: "Fiction",
+    },
+    {
+      _id: 8,
+      title: "Atomic Habits",
+      author: "James Clear",
+      price: 22.99,
+      rating: 4.8,
+      category: "Self-Help",
     },
   ];
+
+  // Filter books by selected category
+  const getCategoryBooks = () => {
+    if (!selectedCategory) return [];
+    return featuredBooks.filter(
+      (book) => book.category === selectedCategory.name
+    );
+  };
 
   const { user } = useContext(AuthContext);
   // user variable available for future use
@@ -263,7 +376,7 @@ const Home = () => {
       </motion.section>
 
       {/* Categories Section - Enhanced with Skew Effect */}
-      
+
       <motion.section
         className="relative py-24 md:py-32 overflow-hidden"
         initial={{ opacity: 0, y: 50 }}
@@ -281,8 +394,229 @@ const Home = () => {
         </div>
 
         <div className="relative container mx-auto px-6 py-24 md:py-32">
+          {/* Decorative SVG Artwork */}
+          <svg
+            className="absolute top-0 right-0 w-96 h-96 opacity-20 pointer-events-none"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="categoryGrad1"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#FF6B35" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#FFD700" stopOpacity="0.6" />
+              </linearGradient>
+            </defs>
+            <motion.circle
+              cx="100"
+              cy="100"
+              r="60"
+              fill="none"
+              stroke="url(#categoryGrad1)"
+              strokeWidth="2"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.circle
+              cx="100"
+              cy="100"
+              r="80"
+              fill="none"
+              stroke="url(#categoryGrad1)"
+              strokeWidth="1"
+              opacity="0.5"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.path
+              d="M50,100 Q100,50 150,100 T250,100"
+              stroke="url(#categoryGrad1)"
+              strokeWidth="2"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{
+                duration: 3,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          </svg>
+
+          {/* Left side decorative elements */}
           <motion.div
-            className="text-center mb-20"
+            className="absolute left-0 top-1/4 w-32 h-32 pointer-events-none"
+            animate={{
+              y: [0, 20, 0],
+              x: [0, 10, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <rect
+                x="20"
+                y="20"
+                width="60"
+                height="60"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="2"
+                rx="10"
+              />
+              <circle
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute -left-20 bottom-10 w-40 h-40 pointer-events-none"
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <polygon
+                points="50,10 90,90 10,90"
+                fill="none"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="2"
+              />
+              <polygon
+                points="50,30 75,75 25,75"
+                fill="none"
+                stroke="rgba(255,255,255,0.15)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute right-10 top-1/3 w-24 h-24 pointer-events-none"
+            animate={{
+              y: [0, 15, 0],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="50"
+                cy="30"
+                r="15"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="2"
+              />
+              <circle
+                cx="30"
+                cy="70"
+                r="12"
+                fill="none"
+                stroke="rgba(255,255,255,0.25)"
+                strokeWidth="1.5"
+              />
+              <circle
+                cx="70"
+                cy="70"
+                r="12"
+                fill="none"
+                stroke="rgba(255,255,255,0.25)"
+                strokeWidth="1.5"
+              />
+              <line
+                x1="50"
+                y1="45"
+                x2="30"
+                y2="65"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="1.5"
+              />
+              <line
+                x1="50"
+                y1="45"
+                x2="70"
+                y2="65"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-20 right-1/4 w-28 h-28 pointer-events-none"
+            animate={{
+              rotate: [360, 0],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line
+                x1="10"
+                y1="50"
+                x2="90"
+                y2="50"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="2"
+              />
+              <line
+                x1="50"
+                y1="10"
+                x2="50"
+                y2="90"
+                stroke="rgba(255,255,255,0.2)"
+                strokeWidth="2"
+              />
+              <line
+                x1="20"
+                y1="20"
+                x2="80"
+                y2="80"
+                stroke="rgba(255,255,255,0.15)"
+                strokeWidth="1.5"
+              />
+              <line
+                x1="80"
+                y1="20"
+                x2="20"
+                y2="80"
+                stroke="rgba(255,255,255,0.15)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="text-center mb-20 relative z-10"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -310,77 +644,90 @@ const Home = () => {
               />
             </h2>
 
-            <p className="text-xl text-indigo-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-indigo-100 max-w-3xl mx-auto leadi ng-relaxed">
               Discover books across all genres and find your next favorite read
               in our carefully curated categories.
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6"
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 px-4 py-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            {categories?.map((category, index) => (
+            {categories.map((category, index) => (
               <motion.div
                 key={category?._id || index}
-                variants={item}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
-                whileHover="hover"
-                className="relative group"
+                whileHover={{ y: -6, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="group cursor-pointer"
+                onClick={() => setSelectedCategory(category)}
               >
-                <div className="absolute -inset-1 bg-white/20 rounded-3xl opacity-0 group-hover:opacity-100 blur transition duration-500 group-hover:duration-200"></div>
-                <Link
-                  to={`/category/${category?.name?.toLowerCase() || "all"}`}
-                  className="relative block p-6 bg-white/10 backdrop-blur-sm rounded-3xl h-full text-center border border-white/20 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:bg-white/20"
+                <div
+                  className="relative overflow-hidden min-h-[180px] rounded-3xl
+            bg-white/10 backdrop-blur-md border border-white/10
+            shadow-md hover:shadow-xl transition-all duration-300 ease-out
+            flex flex-col items-center justify-center p-6 group-hover:border-white/20"
                 >
+                  {/* Glassy subtle gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/3 opacity-0 group-hover:opacity-60 transition-opacity duration-400 pointer-events-none" />
+
+                  {/* Wiggly animated circles */}
                   <motion.div
-                    className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-5 relative shadow-lg"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    className="absolute inset-0"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   >
-                    <div className="absolute inset-0 bg-white/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <FiBookOpen className="h-10 w-10 text-indigo-600 z-10" />
-                    <motion.div
-                      className="absolute -inset-1 bg-white/40 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-1000"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      whileHover={{ scale: 1.2, opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <svg
+                      className="w-full h-full opacity-20"
+                      viewBox="0 0 200 200"
+                    >
+                      <circle
+                        cx="100"
+                        cy="100"
+                        r="60"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.3)"
+                        strokeWidth="1"
+                      />
+                      <circle
+                        cx="100"
+                        cy="100"
+                        r="80"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.2)"
+                        strokeWidth="1"
+                      />
+                    </svg>
                   </motion.div>
 
-                  <motion.h3
-                    className="font-bold text-gray-800 text-lg mb-2"
-                    initial={{ y: 10, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 + index * 0.05 }}
-                  >
-                    {category?.name || "Uncategorized"}
-                  </motion.h3>
-
                   <motion.div
-                    className="text-sm text-indigo-600 font-medium px-3 py-1.5 bg-indigo-50 backdrop-blur-sm rounded-full inline-flex items-center"
-                    initial={{ y: 10, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 + index * 0.05 }}
+                    className="relative z-10 mb-4 p-4 rounded-2xl bg-white/8 backdrop-blur-lg border border-white/10 shadow-inner"
+                    animate={{ y: [0, -5, 0], rotate: [0, 3, -3, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
                   >
-                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mr-2"></span>
+                    <FiBookOpen className="h-8 w-8 text-white/90" />
+                  </motion.div>
+
+                  <h3 className="relative z-10 text-base font-medium text-white text-center px-3 truncate w-full transition-colors duration-300">
+                    {category?.name || "Uncategorized"}
+                  </h3>
+
+                  <motion.span
+                    className="relative z-10 mt-3 text-xs font-medium text-white/90 bg-white/6 px-3 py-1.5 rounded-full border border-white/10 transition-all duration-300"
+                    animate={{ opacity: [0.8, 1, 0.8] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
                     {category?.count || 0}{" "}
                     {category?.count === 1 ? "book" : "books"}
-                  </motion.div>
-
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                  />
-                </Link>
+                  </motion.span>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -404,131 +751,354 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Trending Now - Ultra Modern Design */}
-      <motion.section
-        className="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-indigo-50/50 to-purple-50/30 relative overflow-hidden"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-amber-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Enhanced Header */}
+      {/* Category Books View - Inline Rendering */}
+      {selectedCategory && (
+        <motion.section
+          className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50/50 to-purple-50/30"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Wiggly SVG Background */}
           <motion.div
-            className="text-center mb-20"
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            className="absolute top-0 right-0 w-96 h-96 opacity-30 pointer-events-none"
+            animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           >
-            <motion.div
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium mb-6"
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <FiTrendingUp className="w-4 h-4" />
-              <span>Trending This Week</span>
-            </motion.div>
-
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 relative">
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Trending Now
-              </span>
-              <motion.div
-                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.5 }}
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <motion.circle
+                cx="100"
+                cy="100"
+                r="60"
+                fill="none"
+                stroke="rgba(255, 107, 53, 0.7)"
+                strokeWidth="2"
               />
-            </h2>
-
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Discover the most popular books our readers can't put down.
-              <span className="text-indigo-600 font-semibold">
-                {" "}
-                Updated every hour
-              </span>{" "}
-              with real-time trending data.
-            </p>
+              <motion.circle
+                cx="100"
+                cy="100"
+                r="80"
+                fill="none"
+                stroke="rgba(255, 140, 66, 0.5)"
+                strokeWidth="1.5"
+              />
+              <motion.path
+                d="M50,100 Q100,50 150,100"
+                stroke="rgba(255, 215, 0, 0.6)"
+                strokeWidth="2"
+                fill="none"
+              />
+            </svg>
           </motion.div>
 
-          {/* Quick Filter Tabs */}
           <motion.div
-            className="flex flex-wrap justify-center gap-3 mb-12"
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
+            className="absolute bottom-0 left-0 w-96 h-96 opacity-30 pointer-events-none"
+            animate={{ rotate: -360, scale: [1, 1.1, 1] }}
+            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
           >
-            {[
-              "All",
-              "Fiction",
-              "Non-Fiction",
-              "Mystery",
-              "Romance",
-              "Sci-Fi",
-            ].map((filter, index) => (
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <motion.polygon
+                points="100,20 180,160 20,160"
+                fill="none"
+                stroke="rgba(255, 107, 53, 0.6)"
+                strokeWidth="2"
+              />
+              <motion.polygon
+                points="100,60 150,130 50,130"
+                fill="none"
+                stroke="rgba(255, 23, 68, 0.5)"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </motion.div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Header */}
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <motion.button
-                key={filter}
+                onClick={() => setSelectedCategory(null)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  index === 0
-                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
-                    : "bg-white text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 border border-gray-200"
-                }`}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 + index * 0.1 }}
+                className="mb-6 inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm text-indigo-600 font-semibold rounded-xl hover:bg-white transition-all duration-300 shadow-lg"
               >
-                {filter}
+                <FiArrowRight className="rotate-180 w-4 h-4" />
+                Back
               </motion.button>
-            ))}
-          </motion.div>
 
-          {/* Enhanced Book Grid */}
-          <div className="relative">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredBooks?.slice(0, 4).map((book, index) => (
+              <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  {selectedCategory.name}
+                </span>
+              </h1>
+              <p className="text-xl text-gray-600">
+                Explore {getCategoryBooks().length} amazing books in this
+                category
+              </p>
+            </motion.div>
+
+            {/* Books Grid */}
+            {getCategoryBooks().length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {getCategoryBooks().map((book, index) => (
+                  <motion.div
+                    key={book._id}
+                    initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="group cursor-pointer"
+                    whileHover={{ y: -12, scale: 1.02 }}
+                  >
+                    <motion.div
+                      className="bg-white/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 h-full flex flex-col p-5"
+                      animate={{
+                        boxShadow: [
+                          "0px 0px 20px rgba(0,0,0,0.1)",
+                          "0px 0px 40px rgba(99,102,241,0.2)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                      }}
+                    >
+                      {/* Wiggly animated gradient background */}
+                      <motion.div
+                        className="w-full h-48 bg-gradient-to-br from-indigo-300 via-purple-300 to-pink-300 rounded-xl mb-4 flex items-center justify-center text-5xl group-hover:scale-110 transition-transform duration-300"
+                        animate={{ rotate: [0, 2, -2, 0], y: [0, -5, 0] }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                      >
+                        📚
+                      </motion.div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                        {book.title}
+                      </h3>
+                      <p className="text-indigo-600 font-semibold mb-3 text-sm">
+                        by {book.author}
+                      </p>
+                      <motion.div
+                        className="flex items-center gap-1 mb-4"
+                        animate={{ opacity: [1, 0.7, 1] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      >
+                        {[...Array(5)].map((_, i) => (
+                          <FiStar
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.floor(book.rating)
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                        <span className="text-sm font-semibold text-gray-600 ml-1">
+                          {book.rating}
+                        </span>
+                      </motion.div>
+                      <motion.div
+                        className="mt-auto pt-4 border-t border-gray-200"
+                        animate={{ scale: [1, 1.02, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <span className="text-2xl font-bold text-gray-900">
+                          ${book.price.toFixed(2)}
+                        </span>
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-600">
+                  No books found in this category yet.
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.section>
+      )}
+
+      {/* Trending Now - Only show when no category selected */}
+      {!selectedCategory && (
+        <motion.section
+          className="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-indigo-50/50 to-purple-50/30 relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-amber-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Enhanced Header */}
+            <motion.div
+              className="text-center mb-20"
+              initial={{ y: 30, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium mb-6"
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <FiTrendingUp className="w-4 h-4" />
+                <span>Trending This Week</span>
+              </motion.div>
+
+              <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 relative">
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Trending Now
+                </span>
                 <motion.div
-                  key={book?._id || index}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 0.6,
-                      delay: index * 0.15,
-                      ease: [0.16, 1, 0.3, 1],
-                    },
-                  }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  whileHover={{
-                    y: -12,
-                    transition: {
-                      duration: 0.4,
-                      ease: "easeOut",
-                    },
-                  }}
-                  className="group relative"
-                >
-                  {/* Glow Effect */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-20 blur transition duration-500"></div>
+                  className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                />
+              </h2>
 
-                  <div className="relative h-full flex flex-col bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100/50 backdrop-blur-sm">
-                    {/* Enhanced Image Section */}
-                    <div className="relative pt-[150%] overflow-hidden">
-                      {/* <img
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Discover the most popular books our readers can't put down.
+                <span className="text-indigo-600 font-semibold">
+                  {" "}
+                  Updated every hour
+                </span>{" "}
+                with real-time trending data.
+              </p>
+            </motion.div>
+
+            {/* Quick Filter Tabs */}
+            <motion.div
+              className="flex flex-wrap justify-center gap-3 mb-12"
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              {[
+                "All",
+                "Fiction",
+                "Non-Fiction",
+                "Mystery",
+                "Romance",
+                "Sci-Fi",
+              ].map((filter, index) => (
+                <motion.button
+                  key={filter}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                    index === 0
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                      : "bg-white text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 border border-gray-200"
+                  }`}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                >
+                  {filter}
+                </motion.button>
+              ))}
+            </motion.div>
+
+            {/* Enhanced Book Grid */}
+            <div className="relative">
+              {/* Wiggly background SVG for featured books */}
+              <motion.div
+                className="absolute -top-20 -right-20 w-96 h-96 opacity-10 pointer-events-none"
+                animate={{ rotate: 360, scale: [1, 1.15, 1] }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+              >
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  <motion.path
+                    d="M20,100 Q100,20 180,100 Q100,180 20,100"
+                    stroke="rgba(99, 102, 241, 0.3)"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <motion.circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    fill="none"
+                    stroke="rgba(139, 92, 246, 0.2)"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-20 -left-20 w-80 h-80 opacity-10 pointer-events-none"
+                animate={{ rotate: -360, scale: [1, 1.2, 1] }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              >
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  <motion.polygon
+                    points="100,20 180,160 20,160"
+                    fill="none"
+                    stroke="rgba(236, 72, 153, 0.3)"
+                    strokeWidth="2"
+                  />
+                  <motion.path
+                    d="M50,100 Q100,50 150,100"
+                    stroke="rgba(99, 102, 241, 0.2)"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                </svg>
+              </motion.div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+                {featuredBooks?.slice(0, 4).map((book, index) => (
+                  <motion.div
+                    key={book?._id || index}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.6,
+                        delay: index * 0.15,
+                        ease: [0.16, 1, 0.3, 1],
+                      },
+                    }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    whileHover={{
+                      y: -12,
+                      transition: {
+                        duration: 0.4,
+                        ease: "easeOut",
+                      },
+                    }}
+                    className="group relative"
+                  >
+                    {/* Glow Effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-20 blur transition duration-500"></div>
+
+                    <div className="relative h-full flex flex-col bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100/50 backdrop-blur-sm">
+                      {/* Enhanced Image Section */}
+                      <motion.div
+                        className="relative pt-[150%] overflow-hidden"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                      >
+                        {/* <img
                         className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                         src={
                           book?.image ||
@@ -542,163 +1112,206 @@ const Home = () => {
                         }}
                       /> */}
 
-                      {/* Multi-layer Overlays */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        {/* Multi-layer Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                      {/* Enhanced Badges */}
-                      <div className="absolute top-4 left-4 flex flex-col gap-2">
-                        <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg">
-                          #1 Trending
-                        </span>
-                        <span className="px-3 py-1.5 text-xs font-semibold bg-white/95 text-indigo-600 rounded-full backdrop-blur-sm">
-                          Bestseller
-                        </span>
-                      </div>
-
-                      {/* Quick Actions */}
-                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-                        >
-                          <FiBookmark className="w-4 h-4 text-indigo-600" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-                        >
-                          <FiStar className="w-4 h-4 text-amber-500" />
-                        </motion.button>
-                      </div>
-
-                      {/* Rating Badge */}
-                      <div className="absolute bottom-4 left-4">
-                        <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                          <div className="flex text-amber-400">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className="w-3 h-3 fill-current"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                          </div>
-                          <span className="text-xs font-semibold text-gray-700 ml-1">
-                            {book?.rating || 4.8}
+                        {/* Enhanced Badges */}
+                        <div className="absolute top-4 left-4 flex flex-col gap-2">
+                          <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg">
+                            #1 Trending
+                          </span>
+                          <span className="px-3 py-1.5 text-xs font-semibold bg-white/95 text-indigo-600 rounded-full backdrop-blur-sm">
+                            Bestseller
                           </span>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* Enhanced Content */}
-                    <div className="p-6 flex-1 flex flex-col">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">
-                          {book?.title || "Untitled Book"}
-                        </h3>
-                        <p className="text-indigo-600 font-semibold mb-3 text-sm">
-                          by {book?.author || "Unknown Author"}
-                        </p>
+                        {/* Quick Actions */}
+                        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                          >
+                            <FiBookmark className="w-4 h-4 text-indigo-600" />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                          >
+                            <FiStar className="w-4 h-4 text-amber-500" />
+                          </motion.button>
+                        </div>
 
-                        {/* Enhanced Stats */}
-                        <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <FiUsers className="w-4 h-4" />
-                            <span>2.4k readers</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <FiClock className="w-4 h-4" />
-                            <span>3h read</span>
+                        {/* Rating Badge */}
+                        <div className="absolute bottom-4 left-4">
+                          <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                            <div className="flex text-amber-400">
+                              {[...Array(5)].map((_, i) => (
+                                <svg
+                                  key={i}
+                                  className="w-3 h-3 fill-current"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                              ))}
+                            </div>
+                            <span className="text-xs font-semibold text-gray-700 ml-1">
+                              {book?.rating || 4.8}
+                            </span>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
 
-                      {/* Enhanced Price & Actions */}
-                      <div className="pt-4 border-t border-gray-100">
-                        <div className="flex items-center justify-between mb-4">
-                          <div>
-                            <span className="text-2xl font-bold text-gray-900">
-                              ${book?.price?.toFixed(2) || "0.00"}
-                            </span>
-                            {book?.originalPrice && (
-                              <span className="ml-2 text-sm text-gray-400 line-through">
-                                ${book.originalPrice.toFixed(2)}
+                      {/* Enhanced Content */}
+                      <div className="p-6 flex-1 flex flex-col">
+                        <div className="flex-1">
+                          <motion.h3
+                            className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{
+                              delay: index * 0.15 + 0.1,
+                              duration: 0.5,
+                            }}
+                          >
+                            {book?.title || "Untitled Book"}
+                          </motion.h3>
+                          <motion.p
+                            className="text-indigo-600 font-semibold mb-3 text-sm"
+                            animate={{ opacity: [0.85, 1, 0.85] }}
+                            transition={{
+                              duration: 3,
+                              repeat: Infinity,
+                              delay: index * 0.1,
+                            }}
+                          >
+                            by {book?.author || "Unknown Author"}
+                          </motion.p>
+
+                          {/* Enhanced Stats */}
+                          <motion.div
+                            className="flex items-center gap-4 mb-4 text-sm text-gray-500"
+                            initial={{ opacity: 0, y: 5 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{
+                              delay: index * 0.15 + 0.2,
+                              duration: 0.5,
+                            }}
+                          >
+                            <motion.div
+                              className="flex items-center gap-1"
+                              animate={{ scale: [1, 1.05, 1] }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: index * 0.2,
+                              }}
+                            >
+                              <FiUsers className="w-4 h-4" />
+                              <span>2.4k readers</span>
+                            </motion.div>
+                            <motion.div
+                              className="flex items-center gap-1"
+                              animate={{ scale: [1, 1.05, 1] }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: index * 0.2 + 0.3,
+                              }}
+                            >
+                              <FiClock className="w-4 h-4" />
+                              <span>3h read</span>
+                            </motion.div>
+                          </motion.div>
+                        </div>
+
+                        {/* Enhanced Price & Actions */}
+                        <div className="pt-4 border-t border-gray-100">
+                          <div className="flex items-center justify-between mb-4">
+                            <div>
+                              <span className="text-2xl font-bold text-gray-900">
+                                ${book?.price?.toFixed(2) || "0.00"}
                               </span>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <div className="text-xs text-green-600 font-semibold">
-                              -20% OFF
+                              {book?.originalPrice && (
+                                <span className="ml-2 text-sm text-gray-400 line-through">
+                                  ${book.originalPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-right">
+                              <div className="text-xs text-green-600 font-semibold">
+                                -20% OFF
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex gap-2">
-                          <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                          >
-                            <span>Add to Cart</span>
-                            <FiArrowRight className="w-4 h-4" />
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-4 py-3 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300"
-                          >
-                            <FiBookmark className="w-4 h-4" />
-                          </motion.button>
+                          <div className="flex gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                            >
+                              <span>Add to Cart</span>
+                              <FiArrowRight className="w-4 h-4" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="px-4 py-3 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300"
+                            >
+                              <FiBookmark className="w-4 h-4" />
+                            </motion.button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Enhanced View All Section */}
-            <motion.div
-              className="text-center mt-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
-            >
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-8 max-w-2xl mx-auto">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Want to see more trending books?
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Explore our complete collection of trending books and discover
-                  your next favorite read.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    to="/books"
-                    className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 group"
-                  >
-                    Browse All Books
-                    <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                  <Link
-                    to="/trending"
-                    className="inline-flex items-center px-8 py-4 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300 group"
-                  >
-                    View Trending
-                    <FiTrendingUp className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
+
+              {/* Enhanced View All Section */}
+              <motion.div
+                className="text-center mt-20"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 }}
+              >
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-8 max-w-2xl mx-auto">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Want to see more trending books?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Explore our complete collection of trending books and
+                    discover your next favorite read.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                      to="/books"
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 group"
+                    >
+                      Browse All Books
+                      <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                    <Link
+                      to="/trending"
+                      className="inline-flex items-center px-8 py-4 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300 group"
+                    >
+                      View Trending
+                      <FiTrendingUp className="ml-2 h-5 w-5" />
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
+      )}
 
       <ProductCards />
 
