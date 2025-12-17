@@ -263,6 +263,7 @@ const Home = () => {
       </motion.section>
 
       {/* Categories Section - Enhanced with Skew Effect */}
+      
       <motion.section
         className="relative py-24 md:py-32 overflow-hidden"
         initial={{ opacity: 0, y: 50 }}
