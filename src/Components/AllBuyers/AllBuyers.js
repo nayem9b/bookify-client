@@ -78,7 +78,7 @@ const AllBuyers = () => {
                 <td className="px-4 py-2">{buyer.email}</td>
                 <td className="px-4 py-2">
                   <div className="flex gap-2">
-                    <button onClick={() => setConfirmDelete(buyer)} className="px-2 py-1 bg-red-50 text-red-700 rounded text-sm">Delete</button>
+                    <button onClick={() => setConfirmDelete(buyer)} className="px-2 py-1 bg-red-500 text-white rounded text-sm font-medium">Delete</button>
                   </div>
                 </td>
               </tr>

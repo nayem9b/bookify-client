@@ -42,6 +42,51 @@ const fadeIn = {
   show: { opacity: 1, transition: { duration: 0.8 } },
 };
 
+const WigglyArt = ({ className = "" }) => {
+  return (
+    <div
+      className={`absolute inset-0 ${className} pointer-events-none overflow-hidden`}
+      aria-hidden
+    >
+      <svg
+        viewBox="0 0 400 300"
+        preserveAspectRatio="none"
+        className="w-full h-full"
+      >
+        <path
+          d="M0,150 Q100,50 200,150 T400,150"
+          stroke="#3B82F6"
+          strokeWidth="8"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M0,100 Q100,200 200,100 T400,100"
+          stroke="#10B981"
+          strokeWidth="10"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M0,200 Q100,100 200,200 T400,200"
+          stroke="#F59E0B"
+          strokeWidth="12"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M200,50 Q300,100 250,200 Q200,300 150,200 Q100,100 200,50"
+          fill="#EF4444"
+          opacity="0.18"
+        />
+      </svg>
+    </div>
+  );
+};
+
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -114,7 +159,7 @@ const Home = () => {
             variants={fadeIn}
             initial="hidden"
             animate="show"
-            className="lg:w-1/2 space-y-6 z-10"
+            className="lg:w-3/5 space-y-6 z-10"
           >
             <motion.h1
               className="text-4xl md:text-6xl font-bold leading-tight text-white"
@@ -122,8 +167,8 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              Discover Your Next <span className="text-yellow-300">Favorite</span>{" "}
-              Book
+              Discover Your Next{" "}
+              <span className="text-yellow-300">Favorite</span> Book
             </motion.h1>
 
             <motion.p
@@ -191,18 +236,19 @@ const Home = () => {
           </motion.div>
 
           <motion.div
-            className="hidden lg:block lg:w-1/2 relative z-10"
+            className="hidden lg:block lg:w-2/5 relative z-10"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 100 }}
           >
             <div className="relative">
-              <div className="absolute -top-6 -left-6 w-full h-full bg-yellow-400 rounded-2xl -z-10"></div>
-              <div className="relative bg-white p-2 rounded-xl shadow-2xl transform rotate-2">
+              <div className="absolute -top-6 -left-6 w-[420px] h-[640px] bg-yellow-400 rounded-2xl -z-10"></div>
+              <div className="relative p-2 rounded-xl shadow-2xl transform rotate-2 overflow-hidden bg-transparent">
+                <WigglyArt className="z-0 rounded-xl" />
                 <img
                   src={reading}
                   alt="Reading"
-                  className="rounded-lg max-w-sm w-full h-auto shadow-lg"
+                  className="relative z-10 rounded-lg max-w-md w-full h-auto shadow-lg object-cover"
                 />
 
                 <div className="absolute -bottom-4 -right-4 bg-white p-3 rounded-full shadow-xl">

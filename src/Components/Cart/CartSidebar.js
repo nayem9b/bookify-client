@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaPlus, FaMinus, FaTrash, FaShoppingCart, FaLock } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { toggleCart, removeFromCart, updateQuantity, clearCart } from '../../redux/slices/cartSlice';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaTimes,
+  FaPlus,
+  FaMinus,
+  FaTrash,
+  FaShoppingCart,
+  FaLock,
+} from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  toggleCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+} from "../../redux/slices/cartSlice";
+import { useAuth } from "../../contexts/AuthContext";
 
 const CartSidebar = () => {
   const dispatch = useDispatch();
@@ -11,7 +24,9 @@ const CartSidebar = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const calculateTotal = () => {
-    return items.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+    return items
+      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .toFixed(2);
   };
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -38,74 +53,82 @@ const CartSidebar = () => {
 
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+
   const handleCheckout = () => {
     if (items.length === 0) return;
-    // Close the cart sidebar
+    // If not logged in, force login first
+    if (!user) {
+      // Close the cart sidebar then navigate to login
+      dispatch(toggleCart());
+      navigate("/signin");
+      return;
+    }
+    // Close the cart sidebar and navigate to payment page
     dispatch(toggleCart());
-    // Navigate to payment page
-    navigate('/payment');
+    navigate("/payment");
   };
 
   // Animation variants
   const backdropVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.3 },
     },
-    exit: { 
+    exit: {
       opacity: 0,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   const sidebarVariants = {
-    hidden: { x: '100%' },
-    visible: { 
+    hidden: { x: "100%" },
+    visible: {
       x: 0,
-      transition: { 
-        type: 'spring',
+      transition: {
+        type: "spring",
         damping: 25,
-        stiffness: 300
-      }
+        stiffness: 300,
+      },
     },
-    exit: { 
-      x: '100%',
-      transition: { 
-        type: 'spring',
+    exit: {
+      x: "100%",
+      transition: {
+        type: "spring",
         damping: 25,
-        stiffness: 300
-      }
-    }
+        stiffness: 300,
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       x: 50,
-      scale: 0.9
+      scale: 0.9,
     },
-    visible: (i) => ({ 
-      opacity: 1, 
+    visible: (i) => ({
+      opacity: 1,
       x: 0,
       scale: 1,
       transition: {
         delay: i * 0.1,
         duration: 0.4,
-        ease: 'easeOut'
-      }
+        ease: "easeOut",
+      },
     }),
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       x: -50,
       scale: 0.9,
       transition: {
-        duration: 0.3
-      }
-    }
+        duration: 0.3,
+      },
+    },
   };
 
- return (
+  return (
     <AnimatePresence mode="wait">
       {isOpen && (
         <>
@@ -154,7 +177,7 @@ const CartSidebar = () => {
                 </div>
               </div>
               <p className="text-gray-500 text-sm mt-1">
-                {items.length} {items.length === 1 ? 'item' : 'items'} in cart
+                {items.length} {items.length === 1 ? "item" : "items"} in cart
               </p>
             </div>
 
@@ -165,15 +188,19 @@ const CartSidebar = () => {
                   <div className="bg-indigo-50 p-6 rounded-full mb-6">
                     <FaShoppingCart size={48} className="text-indigo-400" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-                  <p className="text-gray-500 mb-6">Add some items to get started</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    Your cart is empty
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Add some items to get started
+                  </p>
                   <Link to="/books">
-                  <button
-                    onClick={() => dispatch(toggleCart())}
-                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Browse Products
-                  </button>
+                    <button
+                      onClick={() => dispatch(toggleCart())}
+                      className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                      Browse Products
+                    </button>
                   </Link>
                 </div>
               ) : (
@@ -197,19 +224,29 @@ const CartSidebar = () => {
                         )}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-gray-800">{item.title}</h3>
-                        <p className="text-indigo-600 font-semibold mt-1">${item.price.toFixed(2)}</p>
+                        <h3 className="font-medium text-gray-800">
+                          {item.title}
+                        </h3>
+                        <p className="text-indigo-600 font-semibold mt-1">
+                          ${item.price.toFixed(2)}
+                        </p>
                         <div className="flex items-center mt-2">
                           <button
-                            onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
+                            onClick={() =>
+                              handleQuantityChange(item._id, item.quantity - 1)
+                            }
                             disabled={item.quantity <= 1}
                             className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
                           >
                             <FaMinus size={10} />
                           </button>
-                          <span className="mx-3 w-6 text-center">{item.quantity}</span>
+                          <span className="mx-3 w-6 text-center">
+                            {item.quantity}
+                          </span>
                           <button
-                            onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
+                            onClick={() =>
+                              handleQuantityChange(item._id, item.quantity + 1)
+                            }
                             className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
                           >
                             <FaPlus size={10} />
@@ -253,13 +290,13 @@ const CartSidebar = () => {
                   <FaLock size={14} />
                   <span>Proceed to Checkout</span>
                 </button>
-                <Link to="/books">  
-                <button
-                  onClick={() => dispatch(toggleCart())}
-                  className="w-full mt-3 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
-                >
-                  Continue Shopping
-                </button>
+                <Link to="/books">
+                  <button
+                    onClick={() => dispatch(toggleCart())}
+                    className="w-full mt-3 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                  >
+                    Continue Shopping
+                  </button>
                 </Link>
               </div>
             )}
@@ -282,8 +319,13 @@ const CartSidebar = () => {
                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 max-w-sm mx-4"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Clear Cart</h3>
-                  <p className="text-gray-600 mb-6">Are you sure you want to clear your entire cart? This action cannot be undone.</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    Clear Cart
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to clear your entire cart? This action
+                    cannot be undone.
+                  </p>
                   <div className="flex space-x-3">
                     <button
                       onClick={cancelClearCart}
