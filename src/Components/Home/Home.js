@@ -1437,13 +1437,15 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-full py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all duration-300 border border-white/30 hover:border-white/50"
-                  >
-                    View Recommendations
-                  </motion.button>
+                  <Link to="/books">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all duration-300 border border-white/30 hover:border-white/50"
+                    >
+                      View Recommendations
+                    </motion.button>
+                  </Link>
                 </div>
               </motion.div>
             ))}
@@ -1466,20 +1468,24 @@ const Home = () => {
                 and preferences.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300 shadow-lg"
-                >
-                  Get Recommendations
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
-                >
-                  Browse All Books
-                </motion.button>
+                <Link to="/books">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300 shadow-lg"
+                  >
+                    Get Recommendations
+                  </motion.button>{" "}
+                </Link>
+                <Link to="/books">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
+                  >
+                    Browse All Books
+                  </motion.button>
+                </Link>
               </div>
             </div>
           </motion.div>
@@ -1658,16 +1664,6 @@ const Home = () => {
                   Explore our curated collection of trending and recommended
                   books!
                 </p>
-                <div className="flex justify-center gap-2">
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                    >
-                      📚
-                    </div>
-                  ))}
-                </div>
               </div>
             </motion.div>
 
@@ -1688,7 +1684,7 @@ const Home = () => {
                 <p className="text-gray-600 mb-4">
                   Sign up now and get access to thousands of books!
                 </p>
-                <div className="text-3xl font-bold text-cyan-600">🚀</div>
+                <div className="text-3xl font-bold text-cyan-600"></div>
               </div>
             </motion.div>
           </div>
@@ -1785,13 +1781,9 @@ const Home = () => {
                     whileTap={{ scale: 0.95 }}
                     className="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
                   >
-                    <a
-                      href="https://github.com/nayem9b"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link to="/books" rel="noopener noreferrer">
                       Join Now
-                    </a>
+                    </Link>
                   </motion.button>
                 </div>
               </motion.div>
@@ -1881,7 +1873,13 @@ const Home = () => {
                     </h3>
                     <p className="text-gray-600 mb-6">{feature.description}</p>
                     <div className="flex items-center text-indigo-600 font-medium">
-                      <span className="mr-2">Learn more</span>
+                      <Link
+                        to="/books"
+                        className="inline-flex items-center group"
+                      >
+                        <span className="mr-2">Learn more</span>
+                      </Link>
+
                       <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
@@ -2246,20 +2244,24 @@ const Home = () => {
               Join thousands of happy readers and start your journey today
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Start Reading Free
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300"
-              >
-                View All Reviews
-              </motion.button>
+              <Link to="/books">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Start Reading Free
+                </motion.button>
+              </Link>
+              <Link to="/books">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300"
+                >
+                  View All Reviews
+                </motion.button>{" "}
+              </Link>
             </div>
           </motion.div>
         </div>

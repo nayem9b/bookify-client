@@ -75,8 +75,13 @@ const ViewSubscription = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Discover sustainable reading through our premium book subscription platform. 
-                <span className="text-indigo-600 font-semibold"> Join thousands of readers</span> who are transforming their reading experience.
+                Discover sustainable reading through our premium book
+                subscription platform.
+                <span className="text-indigo-600 font-semibold">
+                  {" "}
+                  Join thousands of readers
+                </span>{" "}
+                who are transforming their reading experience.
               </motion.p>
 
               <motion.div
@@ -100,7 +105,7 @@ const ViewSubscription = () => {
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-4 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-300"
                 >
-                  Learn More
+                  <Link to="/books">Learn More</Link>
                 </motion.button>
               </motion.div>
 
@@ -146,7 +151,8 @@ const ViewSubscription = () => {
                 Why Choose Bookify?
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Experience the future of reading with our innovative features and community-driven platform.
+                Experience the future of reading with our innovative features
+                and community-driven platform.
               </p>
             </motion.div>
 
@@ -164,7 +170,9 @@ const ViewSubscription = () => {
                   <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-gray-600">{feature.description}</p>
                 </motion.div>
               ))}
@@ -188,7 +196,8 @@ const ViewSubscription = () => {
                   Ready to Start Your Reading Journey?
                 </h2>
                 <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-                  Join our community of book lovers and discover unlimited reading possibilities.
+                  Join our community of book lovers and discover unlimited
+                  reading possibilities.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/subscription">
@@ -200,13 +209,16 @@ const ViewSubscription = () => {
                       Get Started Now
                     </motion.button>
                   </Link>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
-                  >
-                    Free Trial
-                  </motion.button>
+                  <Link to="/books">
+                    {" "}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
+                    >
+                      Free Trial
+                    </motion.button>
+                  </Link>
                 </div>
                 <div className="flex items-center justify-center gap-6 mt-8 text-indigo-100">
                   <div className="flex items-center gap-2">

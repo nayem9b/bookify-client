@@ -76,7 +76,7 @@ const ProductCards = ({
     <div className={`w-full py-16 bg-background ${className}`}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
-        <h2 className="text-5xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient-shift">
+        <h2 className="text-5xl font-bold text-center mb-16 bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
           {title}
         </h2>
 
@@ -86,7 +86,7 @@ const ProductCards = ({
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-            
+
             <div className="flex gap-8 animate-scroll-right min-w-max">
               {[...duplicatedRow1, ...duplicatedRow1].map((product, index) => (
                 <ProductCard key={`row1-${index}`} product={product} />
@@ -98,7 +98,7 @@ const ProductCards = ({
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-            
+
             <div className="flex gap-8 animate-scroll-left min-w-max">
               {[...duplicatedRow2, ...duplicatedRow2].map((product, index) => (
                 <ProductCard key={`row2-${index}`} product={product} />
@@ -110,7 +110,7 @@ const ProductCards = ({
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-            
+
             <div className="flex gap-8 animate-scroll-right min-w-max">
               {[...duplicatedRow3, ...duplicatedRow3].map((product, index) => (
                 <ProductCard key={`row3-${index}`} product={product} />
