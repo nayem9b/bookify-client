@@ -186,6 +186,8 @@ const Home = () => {
       price: 24.99,
       rating: 4.8,
       category: "Fiction",
+      image_url:
+        "https://m.media-amazon.com/images/I/71R7LSgGQEL._AC_UF1000,1000_QL80_.jpg",
     },
     {
       _id: 2,
@@ -194,6 +196,7 @@ const Home = () => {
       price: 19.99,
       rating: 4.5,
       category: "Technology",
+      image_url: "https://m.media-amazon.com/images/I/91Oane5f2GL.jpg",
     },
     {
       _id: 3,
@@ -202,14 +205,18 @@ const Home = () => {
       price: 29.99,
       rating: 4.9,
       category: "Mystery",
+      image_url:
+        "https://i0.wp.com/thestorysanctuary.com/wp-content/uploads/2023/07/hidden-truths.jpg?ssl=1",
     },
     {
       _id: 4,
-      title: "Future of AI",
+      title: "The Age of AI",
       author: "Sam Wilson",
       price: 34.99,
       rating: 4.7,
       category: "Technology",
+      image_url:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWsagGSstWcbL6SX8F3WQY2CASGnmy8p4OwA&s",
     },
     {
       _id: 5,
@@ -983,7 +990,7 @@ const Home = () => {
             </motion.div>
 
             {/* Quick Filter Tabs */}
-            <motion.div
+            {/* <motion.div
               className="flex flex-wrap justify-center gap-3 mb-12"
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -1015,7 +1022,7 @@ const Home = () => {
                   {filter}
                 </motion.button>
               ))}
-            </motion.div>
+            </motion.div> */}
 
             {/* Enhanced Book Grid */}
             <div className="relative">
@@ -1098,19 +1105,16 @@ const Home = () => {
                         animate={{ y: [0, -3, 0] }}
                         transition={{ duration: 4, repeat: Infinity }}
                       >
-                        {/* <img
-                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                        src={
-                          book?.image ||
-                          "../../Assets/Companies/placeholder_book.png"
-                        }
-                        alt={book?.title || "Book Cover"}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "../../Assets/Companies/placeholder_book.png";
-                        }}
-                      /> */}
+                        <img
+                          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                          src={book?.image_url}
+                          alt={book?.title || "Book Cover"}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "../../Assets/Companies/placeholder_book.png";
+                          }}
+                        />
 
                         {/* Multi-layer Overlays */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -1566,10 +1570,52 @@ const Home = () => {
               >
                 <Link
                   to={item.link}
-                  className={`block p-6 rounded-2xl bg-gradient-to-br from-${item.color}-50 to-${item.color}-100 hover:from-${item.color}-100 hover:to-${item.color}-200 transition-all duration-300 text-center group-hover:shadow-lg`}
+                  className="block p-6 rounded-2xl bg-gradient-to-br hover:shadow-lg transition-all duration-300 text-center group-hover:shadow-lg"
+                  style={{
+                    backgroundImage: `linear-gradient(to bottom right, rgb(${
+                      item.color === "indigo"
+                        ? "224, 231, 255"
+                        : item.color === "amber"
+                        ? "254, 243, 199"
+                        : item.color === "green"
+                        ? "220, 252, 231"
+                        : item.color === "purple"
+                        ? "243, 232, 255"
+                        : item.color === "blue"
+                        ? "219, 234, 254"
+                        : "252, 231, 243"
+                    }), rgb(${
+                      item.color === "indigo"
+                        ? "199, 210, 254"
+                        : item.color === "amber"
+                        ? "253, 230, 138"
+                        : item.color === "green"
+                        ? "187, 247, 208"
+                        : item.color === "purple"
+                        ? "221, 214, 254"
+                        : item.color === "blue"
+                        ? "191, 219, 254"
+                        : "249, 168, 212"
+                    }))`,
+                  }}
                 >
                   <div
-                    className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-${item.color}-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}
+                    className="w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300"
+                    style={{
+                      backgroundColor: `${
+                        item.color === "indigo"
+                          ? "#4f46e5"
+                          : item.color === "amber"
+                          ? "#d97706"
+                          : item.color === "green"
+                          ? "#22c55e"
+                          : item.color === "purple"
+                          ? "#a855f7"
+                          : item.color === "blue"
+                          ? "#3b82f6"
+                          : "#ec4899"
+                      }`,
+                    }}
                   >
                     {item.icon}
                   </div>
