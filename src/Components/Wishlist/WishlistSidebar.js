@@ -79,51 +79,88 @@ const WishlistSidebar = () => {
           >
             <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">Your Wishlist</h2>
-                <p className="text-gray-500 text-sm mt-1">{items.length} {items.length === 1 ? 'item' : 'items'}</p>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Your Wishlist
+                </h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  {items.length} {items.length === 1 ? "item" : "items"}
+                </p>
               </div>
-              <button onClick={() => dispatch(toggleWishlist())} className="p-2 text-gray-500 hover:text-gray-700">
+              <button
+                onClick={() => dispatch(toggleWishlist())}
+                className="p-2 text-gray-500 hover:text-gray-700"
+              >
                 <FaTimes />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
               {loading ? (
-                <div className="flex items-center justify-center h-full">Loading...</div>
+                <div className="flex items-center justify-center h-full">
+                  Loading...
+                </div>
               ) : items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6">
                   <div className="bg-indigo-50 p-6 rounded-full mb-6">
                     <FaHeart size={48} className="text-indigo-400" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Your wishlist is empty</h3>
-                  <p className="text-gray-500 mb-6">Add books you like to your wishlist</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    Your wishlist is empty
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Add books you like to your wishlist
+                  </p>
                   <Link to="/books" onClick={() => dispatch(toggleWishlist())}>
-                    <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Browse Books</button>
+                    <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                      Browse Books
+                    </button>
                   </Link>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {items.map((item, idx) => (
-                    <div key={item.id || item._id || idx} className="flex items-start p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                      <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden mr-4 flex items-center justify-center">
-                        {/* If item has image_url use it, else show heart icon */}
-                        {item.image_url ? (
-                          <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                        ) : (
-                          <FaHeart className="text-indigo-400" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-800">{item.title || item.name || item.id}</h3>
-                        {item.author && <p className="text-sm text-gray-500">{item.author}</p>}
-                      </div>
-                      <button
-                        onClick={() => dispatch(removeFromWishlist(item.id || item._id))}
-                        className="p-2 text-red-500 hover:text-red-700"
+                    <Link
+                      to={`/books/${item.id || item._id}`}
+                      key={item.id || item._id || idx}
+                      onClick={() => dispatch(toggleWishlist())}
+                      className="block"
+                    >
+                      <div
+                        key={item.id || item._id || idx}
+                        className="flex items-start p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
                       >
-                        Remove
-                      </button>
-                    </div>
+                        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden mr-4 flex items-center justify-center">
+                          {/* If item has image_url use it, else show heart icon */}
+                          {item.image_url ? (
+                            <img
+                              src={item.image_url}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <FaHeart className="text-indigo-400" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-800">
+                            {item.title || item.name || item.id}
+                          </h3>
+                          {item.author && (
+                            <p className="text-sm text-gray-500">
+                              {item.author}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() =>
+                            dispatch(removeFromWishlist(item.id || item._id))
+                          }
+                          className="p-2 text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -132,8 +169,21 @@ const WishlistSidebar = () => {
             {items.length > 0 && (
               <div className="border-t border-gray-100 p-6 bg-white">
                 <div className="flex justify-between">
-                  <button onClick={() => { dispatch(clearWishlist()); }} className="text-red-600">Clear Wishlist</button>
-                  <Link to="/wishlist" onClick={() => dispatch(toggleWishlist())} className="text-indigo-600 font-medium">View Full</Link>
+                  <button
+                    onClick={() => {
+                      dispatch(clearWishlist());
+                    }}
+                    className="text-red-600"
+                  >
+                    Clear Wishlist
+                  </button>
+                  <Link
+                    to="/wishlist"
+                    onClick={() => dispatch(toggleWishlist())}
+                    className="text-indigo-600 font-medium"
+                  >
+                    View Full
+                  </Link>
                 </div>
               </div>
             )}

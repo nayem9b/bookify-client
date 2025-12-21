@@ -69,60 +69,40 @@ const BooksPage = () => {
   };
 
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   const handleAddToWishlist = async (book) => {
-    console.log("Adding to wishlist:", user);
     // Require authentication
-    if (!user || (!user.uid && !user.id && !user._id)) {
+    if (!user) {
       toast.error("Please sign in to add items to your wishlist");
       return;
     }
 
-    const userId = user.uid || user.id || user._id;
-    // Normalize bookId from several possible shapes (book._id, book.id, book.bookId or a raw id)
-    let bookId = book && (book._id || book.id || book.bookId || null);
-    // If caller passed a minimal payload like { bookId: '...' } as `book`, handle that too
-    if (!bookId && book && typeof book === "object" && book.bookId)
-      bookId = book.bookId;
-    if (bookId != null) bookId = String(bookId);
-    const API = API_BASE;
+    // Normalize bookId from several possible shapes
+    let bookId = book && (book._id || book.id || book.bookId);
 
-    try {
-      const token = localStorage.getItem("bookify-token");
-      console.debug("Wishlist PATCH ->", { userId, bookId });
-      const headers = { "Content-Type": "application/json" };
-      if (token) headers.Authorization = `Bearer ${token}`;
-
-      const res = await fetch(`${API}/users/${userId}/wishlist`, {
-        method: "PATCH",
-        headers,
-        body: JSON.stringify({ bookId }),
-      });
-
-      const data = await res.json();
-      console.log(data);
-      if (!res.ok) {
-        console.error("Failed to add wishlist item", data);
-        toast.error(data?.message || "Failed to add to wishlist");
-        return;
-      }
-
-      // Update local wishlist state from server response (preferred)
-      if (data?.wishlist) {
-        dispatch(setWishlist(data.wishlist));
-      } else {
-        // Fallback: optimistically add minimal item
-        dispatch(addToWishlist({ id: bookId, title: book.title }));
-      }
-
-      toast.success(`${book.title || "Item"} added to wishlist!`, {
-        position: "bottom-right",
-      });
-    } catch (err) {
-      console.error("Error adding to wishlist", err);
-      toast.error("Error adding to wishlist");
+    if (!bookId) {
+      console.error("Could not extract bookId from book object:", book);
+      toast.error("Book ID not found");
+      return;
     }
+
+    bookId = String(bookId);
+
+    // Add to Redux wishlist (stored locally with Redux Persist)
+    dispatch(
+      addToWishlist({
+        id: bookId,
+        title: book.title,
+        author: book.authors || book.author,
+        price: book.price,
+        image_url: book.image_url,
+        _id: bookId,
+      })
+    );
+
+    toast.success(`${book.title || "Item"} added to wishlist!`, {
+      position: "bottom-right",
+    });
   };
 
   const firstLoadRef = useRef(true);
