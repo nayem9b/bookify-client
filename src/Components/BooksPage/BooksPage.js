@@ -598,23 +598,34 @@ const BooksPage = () => {
                         </Link>
 
                         <p className="text-sm text-slate-600 mb-2">
-                          <span className="font-medium text-slate-800">
-                            {book.author || "Unknown"}
+                          <span className="font-medium text-[#55a57a]">
+                            {book.authors || "Unknown"}
                           </span>
                         </p>
 
                         <div className="flex items-center justify-between">
-                          <div>
+                          <div className="flex items-center justify-between">
                             {book.price && (
                               <p className="text-base font-semibold text-slate-900">
-                                ${parseFloat(book.price).toFixed(2)}
+                                <span className="text-sm">
+                                  <span className="text-xs">$ </span>
+                                </span>
+                                {parseFloat(book.price).toFixed(2)}
                               </p>
                             )}
+                            <div className="ml-2">
+                              {book.old_price && (
+                                <p className="text-sm font-medium text-slate-400 line-through">
+                                  <span className="text-xs">$ </span>
+                                  {parseFloat(book.old_price).toFixed(2)}
+                                </p>
+                              )}
+                            </div>
                           </div>
 
-                          {book.genre && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                              {book.genre}
+                          {book?.category && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-normal bg-gray-100 text-gray-700">
+                              {book.category}
                             </span>
                           )}
                         </div>

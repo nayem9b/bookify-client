@@ -14,6 +14,85 @@ const priceBadge = (resale, original) => {
   return `${discount}% OFF`;
 };
 
+const generateDetailedDescription = (book) => {
+  if (book.description || book.longDescription) {
+    return book.description || book.longDescription;
+  }
+
+  // Generate a detailed description from available book data
+  const parts = [];
+
+  if (book.title) {
+    parts.push(
+      `${book.title} is a remarkable literary work that has captivated readers worldwide.`
+    );
+  }
+
+  if (book.authors) {
+    parts.push(
+      `Written by ${book.authors}, this book showcases masterful storytelling and compelling narratives.`
+    );
+  }
+
+  if (book.category) {
+    parts.push(
+      `This ${book.category} book offers readers unique insights and engaging content.`
+    );
+  }
+
+  if (book.average_rating && book.ratings_count) {
+    parts.push(
+      `With an impressive rating of ${
+        book.average_rating
+      } out of 5 stars from ${book.ratings_count.toLocaleString()} readers, this book has proven to be a favorite among book enthusiasts.`
+    );
+  }
+
+  if (book.publisher) {
+    parts.push(
+      `Published by ${book.publisher}, this book maintains the highest standards of quality and presentation.`
+    );
+  }
+
+  if (book.language_code) {
+    parts.push(
+      `Available in ${book.language_code.toUpperCase()}, making it accessible to a wide audience.`
+    );
+  }
+
+  if (book.isbn) {
+    parts.push(
+      `ISBN: ${book.isbn}. This unique identifier ensures you're getting the authentic version of this beloved title.`
+    );
+  }
+
+  if (book.original_publication_year) {
+    parts.push(
+      `Originally published in ${book.original_publication_year}, this book has stood the test of time.`
+    );
+  }
+
+  if (book.stock !== undefined) {
+    const stockStatus =
+      book.stock > 10
+        ? "readily available"
+        : book.stock > 0
+        ? "limited copies available"
+        : "out of stock";
+    parts.push(`Currently ${stockStatus} at an exceptional value price.`);
+  }
+
+  if (parts.length === 0) {
+    parts.push(
+      `${
+        book.title || "This book"
+      } is a wonderful addition to any collection. Discover why readers love it by adding it to your cart today!`
+    );
+  }
+
+  return parts.join(" ");
+};
+
 export default function BookDetailsPage() {
   const book = useLoaderData() || {};
   const { id } = useParams();
@@ -100,12 +179,12 @@ export default function BookDetailsPage() {
           <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
-                {book.name || "Untitled Book"}
+                {book?.title || "Untitled Bookk"}
               </h1>
               <p className="mt-1 text-sm text-slate-500">
                 by{" "}
                 <span className="font-medium text-slate-700">
-                  {book.author || "Unknown"}
+                  {book.authors || "Unknown"}
                 </span>
               </p>
             </div>
@@ -113,16 +192,18 @@ export default function BookDetailsPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="text-2xl font-bold text-indigo-600">
-                  ${book.resale_price ?? "—"}
+                  <span className="text-sm">$</span>
+                  {book.price ?? "—"}
                 </div>
-                {book.original_price && (
+                {book.old_price && (
                   <div className="text-sm text-slate-400 line-through">
-                    ${book.original_price}
+                    <span className="text-xs">$</span>
+                    {book.old_price}
                   </div>
                 )}
-                {book.original_price && (
+                {book.price && (
                   <span className="inline-block mt-2 text-xs font-semibold bg-green-600/90 text-white px-2 py-1 rounded-lg">
-                    {priceBadge(book.resale_price, book.original_price)}
+                    {priceBadge(book.price, book.old_price)}
                   </span>
                 )}
               </div>
@@ -287,7 +368,7 @@ export default function BookDetailsPage() {
                     About
                   </h2>
                   <p className="mt-3 text-slate-600 leading-relaxed">
-                    {book.description || "No description provided."}
+                    {generateDetailedDescription(book)}
                   </p>
                 </motion.div>
               )}
@@ -344,11 +425,11 @@ export default function BookDetailsPage() {
                     </div>
                     <div>
                       <dt className="font-medium text-slate-700">Published</dt>
-                      <dd>{book.publishedDate || "—"}</dd>
+                      <dd>{book.published_year || "—"}</dd>
                     </div>
                     <div>
-                      <dt className="font-medium text-slate-700">Pages</dt>
-                      <dd>{book.pages || "—"}</dd>
+                      <dt className="font-medium text-slate-700">Rating</dt>
+                      <dd>{book.average_rating || "—"}</dd>
                     </div>
                     <div>
                       <dt className="font-medium text-slate-700">ISBN</dt>
