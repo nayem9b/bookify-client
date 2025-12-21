@@ -124,7 +124,7 @@ export default function BookDetailsPage() {
   const handleAddToCart = (book) => {
     dispatch(addToCart(book));
     toast.success(`${book.title} added to cart!`, {
-      position: "top-right",
+      position: "top-center",
     });
   };
 
@@ -214,7 +214,7 @@ export default function BookDetailsPage() {
             <Badge label={`Condition: ${book.condition || "Good"}`} />
             <Badge label={`Category: ${book.category || "General"}`} />
             <Badge label={`Seller: ${book.seller || "Marketplace"}`} />
-            <Badge label={`Language: ${book.language || "English"}`} />
+            <Badge label={`Language: ${book.language_code || "English"}`} />
           </section>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6">

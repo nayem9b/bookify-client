@@ -101,7 +101,7 @@ const AdvertisedCard = ({ product }) => {
                 ) : (
                   <>
                     <h1 className=' font-semibold'>
-                      You need to be a buyer to purchase this
+                      You need to be a buyer to purchase thissss
                     </h1>
                   </>
                 )}
