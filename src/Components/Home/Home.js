@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/UserContext";
 import { motion } from "framer-motion";
 import {
@@ -160,9 +160,12 @@ const WigglyArt = ({ className = "" }) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     // Mock data for categories
@@ -260,6 +263,58 @@ const Home = () => {
     );
   };
 
+  // Generate search suggestions based on query
+  const generateSuggestions = (query) => {
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const suggestionSet = new Set();
+    const suggestionList = [];
+
+    // Extract titles, authors, and categories that match the query
+    featuredBooks.forEach((book) => {
+      if (
+        book.title.toLowerCase().includes(lowerQuery) &&
+        !suggestionSet.has(book.title)
+      ) {
+        suggestionSet.add(book.title);
+        suggestionList.push({ text: book.title, type: "title" });
+      }
+      if (
+        book.author.toLowerCase().includes(lowerQuery) &&
+        !suggestionSet.has(book.author)
+      ) {
+        suggestionSet.add(book.author);
+        suggestionList.push({ text: book.author, type: "author" });
+      }
+      if (
+        book.category.toLowerCase().includes(lowerQuery) &&
+        !suggestionSet.has(book.category)
+      ) {
+        suggestionSet.add(book.category);
+        suggestionList.push({ text: book.category, type: "category" });
+      }
+    });
+
+    setSuggestions(suggestionList.slice(0, 8)); // Limit to 8 suggestions
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    generateSuggestions(value);
+    setShowSuggestions(true);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion.text);
+    setShowSuggestions(false);
+    navigate(`/books?search=${encodeURIComponent(suggestion.text)}`);
+  };
+
   const { user } = useContext(AuthContext);
   // user variable available for future use
 
@@ -316,9 +371,63 @@ const Home = () => {
                 className="block w-full pl-12 pr-4 py-4 border-0 rounded-xl bg-white/90 text-gray-900 placeholder-indigo-400 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 shadow-lg"
                 placeholder="Search for books, authors, or categories..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
+                onFocus={() => searchQuery && setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    setShowSuggestions(false);
+                    navigate(
+                      `/books?search=${encodeURIComponent(searchQuery)}`
+                    );
+                  }
+                }}
               />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-medium px-6 py-2.5 rounded-lg flex items-center gap-2 shadow-lg">
+
+              {/* Autocomplete Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-indigo-300 rounded-lg shadow-xl z-50">
+                  {suggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="w-full text-left px-4 py-3 hover:bg-indigo-50 transition-colors flex items-center gap-3 border-b last:border-b-0"
+                    >
+                      <span className="text-indigo-400">
+                        {suggestion.type === "title" && (
+                          <FiBookOpen className="h-4 w-4" />
+                        )}
+                        {suggestion.type === "author" && (
+                          <span className="text-sm">✍️</span>
+                        )}
+                        {suggestion.type === "category" && (
+                          <span className="text-sm">📂</span>
+                        )}
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-gray-900 font-medium text-sm">
+                          {suggestion.text}
+                        </p>
+                        <p className="text-gray-500 text-xs capitalize">
+                          {suggestion.type}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  if (searchQuery.trim()) {
+                    setShowSuggestions(false);
+                    navigate(
+                      `/books?search=${encodeURIComponent(searchQuery)}`
+                    );
+                  }
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-medium px-6 py-2.5 rounded-lg flex items-center gap-2 shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+              >
                 Search
                 <FiArrowRight className="h-4 w-4" />
               </button>

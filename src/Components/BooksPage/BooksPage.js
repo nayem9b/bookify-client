@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { FiShoppingCart, FiFilter } from "react-icons/fi";
 import { useDispatch } from "react-redux";
@@ -13,14 +13,20 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const BooksPage = () => {
+  const [searchParams] = useSearchParams();
   const [books, setBooks] = useState([]);
-  const [selectedBooks, setSelectedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState(() => {
+    // Initialize searchTerm from URL parameter if it exists
+    return searchParams.get("search") || "";
+  });
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // Initialize selectedCategory from URL parameter if it exists
+    return searchParams.get("category") || "All";
+  });
   const [showCategories, setShowCategories] = useState(true);
   const [isCategoryLoading, setIsCategoryLoading] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
@@ -34,6 +40,11 @@ const BooksPage = () => {
   // Extract unique categories from books
   const categories = [
     "All",
+    "trending",
+    "editors-choice",
+    "book-of-month",
+    "reading-lists",
+    "authors",
     "History",
     "Technology",
     "Fiction",
@@ -147,7 +158,6 @@ const BooksPage = () => {
           throw new Error("Failed to fetch books");
         }
         const data = await response.json();
-        setSelectedBooks(data);
         // Support APIs that return either an array or an object { books: [...] }
         const payload = Array.isArray(data)
           ? data
@@ -178,6 +188,18 @@ const BooksPage = () => {
     };
   }, [selectedCategory]);
 
+  // Format category display name
+  const formatCategoryName = (category) => {
+    const categoryMap = {
+      trending: "Trending Now",
+      "editors-choice": "Editor's Choice",
+      "book-of-month": "Book of the Month",
+      "reading-lists": "Reading Lists",
+      authors: "Author Spotlights",
+    };
+    return categoryMap[category] || category;
+  };
+
   // Filter books based on search term
   // Use defensive normalization to avoid runtime errors when fields are missing
   const filteredBooks = books.filter((book) => {
@@ -193,19 +215,38 @@ const BooksPage = () => {
         ? true
         : title.includes(term) || author.includes(term) || genre.includes(term);
 
-    const matchesCategory =
-      selectedCategory === "All" ||
-      book.genre === selectedCategory ||
-      book.category === selectedCategory;
+    // Handle special discover categories
+    let matchesCategory = false;
+    if (selectedCategory === "All") {
+      matchesCategory = true;
+    } else if (selectedCategory === "trending") {
+      // Show high-rated books for trending
+      matchesCategory = book.rating >= 4.5;
+    } else if (selectedCategory === "editors-choice") {
+      // Show top-rated books
+      matchesCategory = book.rating >= 4.7;
+    } else if (selectedCategory === "book-of-month") {
+      // Show highly popular books
+      matchesCategory = book.rating >= 4.6;
+    } else if (selectedCategory === "reading-lists") {
+      // Show popular books across categories
+      matchesCategory = book.rating >= 4.4;
+    } else if (selectedCategory === "authors") {
+      // Show books from well-known authors (has author info)
+      matchesCategory = book.author && book.author.trim().length > 0;
+    } else {
+      // Regular category filter
+      matchesCategory =
+        book.genre === selectedCategory || book.category === selectedCategory;
+    }
 
     return matchesSearch && matchesCategory;
   });
 
-  // Get current books (use selectedBooks if provided)
+  // Get current books - always use filteredBooks to respect search and category filters
   const indexOfLastBook = currentPage * itemsPerPage;
   const indexOfFirstBook = indexOfLastBook - itemsPerPage;
-  const sourceBooks =
-    selectedBooks && selectedBooks.length ? selectedBooks : filteredBooks;
+  const sourceBooks = filteredBooks;
   const currentBooks = sourceBooks.slice(indexOfFirstBook, indexOfLastBook);
   const totalPages = Math.ceil((sourceBooks.length || 0) / itemsPerPage);
 
@@ -342,7 +383,7 @@ const BooksPage = () => {
                           }`}
                         >
                           <span className="truncate max-w-[10rem]">
-                            {category}
+                            {formatCategoryName(category)}
                           </span>
                           {/* <span
                             className={`inline-block ml-1 text-xs px-2 py-0.5 rounded-full ${
