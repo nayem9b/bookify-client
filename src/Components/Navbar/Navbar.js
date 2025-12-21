@@ -196,38 +196,32 @@ const Navbar = () => {
     {
       name: "Trending Now",
       icon: <FiTrendingUp className="w-4 h-4" />,
-      path: "/trending",
+      path: "/books?category=trending",
       description: "What's popular right now",
     },
     {
       name: "Editor's Choice",
       icon: <FiStar className="w-4 h-4" />,
-      path: "/editors-choice",
+      path: "/books?category=editors-choice",
       description: "Handpicked by our experts",
     },
     {
       name: "Book of the Month",
       icon: <FiAward className="w-4 h-4" />,
-      path: "/book-of-month",
+      path: "/books?category=book-of-month",
       description: "Featured monthly selection",
     },
     {
       name: "Reading Lists",
       icon: <FiBookmark className="w-4 h-4" />,
-      path: "/reading-lists",
+      path: "/books?category=reading-lists",
       description: "Curated collections",
     },
     {
       name: "Author Spotlights",
       icon: <FiUser className="w-4 h-4" />,
-      path: "/authors",
+      path: "/books?category=authors",
       description: "Meet your favorite authors",
-    },
-    {
-      name: "Book Clubs",
-      icon: <FiBookOpen className="w-4 h-4" />,
-      path: "/book-clubs",
-      description: "Join reading communities",
     },
   ];
 
@@ -235,7 +229,7 @@ const Navbar = () => {
   const notifications = [
     {
       id: 1,
-      title: "New comment on your review",
+      title: "Price drop on Black Friday Deals",
       subtitle: "2 hours ago",
       path: "/dashboard",
     },
