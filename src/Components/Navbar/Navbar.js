@@ -98,46 +98,51 @@ const Navbar = () => {
     }
   };
 
+  const handleCategoryClick = (categoryName) => {
+    navigate("/books", { state: { selectedCategory: categoryName } });
+    setIsCategoriesOpen(false);
+  };
+
   const categories = [
     {
       name: "Fiction",
       icon: <FiBook className="w-4 h-4" />,
-      path: "/category/fiction",
+      value: "Fiction",
     },
     {
       name: "Non-Fiction",
       icon: <FiBookOpen className="w-4 h-4" />,
-      path: "/category/non-fiction",
+      value: "Non-Fiction",
     },
     {
       name: "Mystery",
       icon: <FiBookmark className="w-4 h-4" />,
-      path: "/category/mystery",
+      value: "Mystery",
     },
     {
       name: "Romance",
       icon: <FiHeart className="w-4 h-4" />,
-      path: "/category/romance",
+      value: "Romance",
     },
     {
       name: "Science Fiction",
       icon: <FiStar className="w-4 h-4" />,
-      path: "/category/sci-fi",
+      value: "Sci-fi",
     },
     {
       name: "Biography",
       icon: <FiUser className="w-4 h-4" />,
-      path: "/category/biography",
+      value: "Biography",
     },
     {
       name: "History",
       icon: <FiBook className="w-4 h-4" />,
-      path: "/category/history",
+      value: "History",
     },
     {
       name: "Self-Help",
       icon: <FiTrendingUp className="w-4 h-4" />,
-      path: "/category/self-help",
+      value: "Self-help",
     },
   ];
 
@@ -316,11 +321,10 @@ const Navbar = () => {
                       </h3>
                       <div className="grid grid-cols-2 gap-3">
                         {categories.map((category, index) => (
-                          <Link
+                          <button
                             key={index}
-                            to={category.path}
-                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors group"
-                            onClick={() => setIsCategoriesOpen(false)}
+                            onClick={() => handleCategoryClick(category.value)}
+                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors group text-left"
                           >
                             <div className="text-indigo-600 group-hover:text-indigo-700">
                               {category.icon}
@@ -328,7 +332,7 @@ const Navbar = () => {
                             <span className="text-gray-700 group-hover:text-indigo-700 font-medium">
                               {category.name}
                             </span>
-                          </Link>
+                          </button>
                         ))}
                       </div>
                     </div>

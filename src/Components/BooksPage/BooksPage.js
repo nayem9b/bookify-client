@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { FiShoppingCart, FiFilter } from "react-icons/fi";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const BooksPage = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +25,9 @@ const BooksPage = () => {
     return searchParams.get("search") || "";
   });
   const [selectedCategory, setSelectedCategory] = useState(() => {
-    // Initialize selectedCategory from URL parameter if it exists
+    // Priority: state from Navbar > URL parameter > default
+    const stateCategory = location.state?.selectedCategory;
+    if (stateCategory) return stateCategory;
     return searchParams.get("category") || "All";
   });
   const [showCategories, setShowCategories] = useState(true);
@@ -40,22 +43,29 @@ const BooksPage = () => {
   // Extract unique categories from books
   const categories = [
     "All",
+    "History",
+    "Technology",
+    "Fiction",
+    "Non-Fiction",
+    "Science",
+    "Fantasy",
+    "Mystery",
+    "Romance",
+    "Sci-fi",
+    "Biography",
+    "Business",
+    "War",
+    "Love",
+    "Medicine",
+    "Philosophy",
+    "Art",
+    "Craft",
+    "Self-help",
     "trending",
     "editors-choice",
     "book-of-month",
     "reading-lists",
     "authors",
-    "History",
-    "Technology",
-    "Fiction",
-    "Science",
-    "Fantasy",
-    "War",
-    "Love",
-    "Medicine",
-    "Art",
-    "Craft",
-    "Self help",
     ...new Set(books.map((book) => book.genre).filter(Boolean)),
   ];
 
@@ -175,7 +185,6 @@ const BooksPage = () => {
       "editors-choice": "Editor's Choice",
       "book-of-month": "Book of the Month",
       "reading-lists": "Reading Lists",
-      authors: "Author Spotlights",
     };
     return categoryMap[category] || category;
   };
