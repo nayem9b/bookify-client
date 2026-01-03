@@ -779,7 +779,13 @@ const Home = () => {
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 className="group cursor-pointer"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() =>
+                  navigate(
+                    `/books?category=${encodeURIComponent(
+                      category?.name || ""
+                    )}`
+                  )
+                }
               >
                 <div
                   className="relative overflow-hidden min-h-[180px] rounded-3xl
