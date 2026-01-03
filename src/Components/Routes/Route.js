@@ -50,13 +50,17 @@ export const router = createBrowserRouter([
         path: "/category/:id",
         element: <PerCategoryPage></PerCategoryPage>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/category/${params.id}`),
+          fetch(
+            `https://bookify-serverside.onrender.com/category/${params.id}`
+          ),
       },
       {
         path: "/books/:id",
         element: <BookDetailsPage />,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/api/books/${params.id}`),
+          fetch(
+            `https://bookify-serverside.onrender.com/api/books/${params.id}`
+          ),
       },
       {
         path: "/signup",
@@ -72,11 +76,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About/>,
+        element: <About />,
       },
       {
         path: "/contact",
-        element: <Contact/>,
+        element: <Contact />,
       },
       {
         path: "/payment",
@@ -164,7 +168,7 @@ export const router = createBrowserRouter([
         path: "/dashboard/allproducts",
         element: (
           // <SellerRoute>
-          <AllProducts/>
+          <AllProducts />
           // </SellerRoute>
         ),
       },

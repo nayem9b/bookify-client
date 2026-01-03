@@ -219,14 +219,17 @@ const AddProduct = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetch("http://localhost:5000/api/books", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        "https://bookify-serverside.onrender.com/api/books",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({}));

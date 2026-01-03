@@ -8,15 +8,17 @@ const Wishlist = () => {
   const { user } = useContext(AuthContext);
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/wishlist?email=${user.email}`)
+      .get(
+        `https://bookify-serverside.onrender.com/wishlist?email=${user.email}`
+      )
       .then((data) => setWish(data.data));
   }, [user?.email]);
 
   return (
     <div>
-      <h2 className='text-3xl'>My Wishlist</h2>
-      <div className='overflow-x-auto'>
-        <table className='table w-full'>
+      <h2 className="text-3xl">My Wishlist</h2>
+      <div className="overflow-x-auto">
+        <table className="table w-full">
           <thead>
             <tr>
               <th></th>
@@ -32,11 +34,11 @@ const Wishlist = () => {
                 <td>{wish.name}</td>
                 <td>
                   {" "}
-                  {wish.price} <span className='text-2xl'>৳</span>{" "}
+                  {wish.price} <span className="text-2xl">৳</span>{" "}
                 </td>
                 <td>
-                  <Link to='/payment'>
-                    <button className='btn btn-xs btn-danger'>Purchase</button>
+                  <Link to="/payment">
+                    <button className="btn btn-xs btn-danger">Purchase</button>
                   </Link>
                 </td>
               </tr>

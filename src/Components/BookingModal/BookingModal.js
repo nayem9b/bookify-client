@@ -18,7 +18,7 @@ const BookingModal = ({ item, price }) => {
     };
 
     console.log(booking);
-    fetch("http://localhost:5000/booking", {
+    fetch("https://bookify-serverside.onrender.com/booking", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -35,64 +35,66 @@ const BookingModal = ({ item, price }) => {
 
   return (
     <div>
-      <input type='checkbox' id='booking-modal' className='modal-toggle' />
-      <div className='modal'>
-        <div className='modal-box relative'>
+      <input type="checkbox" id="booking-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box relative">
           <label
-            htmlFor='booking-modal'
-            className='btn btn-sm btn-circle absolute right-2 top-2'>
+            htmlFor="booking-modal"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+          >
             ✕
           </label>
-          <h3 className='text-lg font-bold'>{item}</h3>
+          <h3 className="text-lg font-bold">{item}</h3>
           <form
             onSubmit={handleBooking}
-            className='grid grid-cols-1 gap-3 mt-10'>
+            className="grid grid-cols-1 gap-3 mt-10"
+          >
             <input
-              name='name'
-              type='text'
+              name="name"
+              type="text"
               defaultValue={user?.displayName}
               disabled
-              placeholder='Your Name'
-              className='input w-full input-bordered'
+              placeholder="Your Name"
+              className="input w-full input-bordered"
             />
             <input
-              type='text'
+              type="text"
               disabled
               value={user?.email}
-              className='input w-full input-bordered '
+              className="input w-full input-bordered "
             />
 
             <input
-              name='name'
+              name="name"
               value={item}
               disabled
-              className='input w-full input-bordered'
+              className="input w-full input-bordered"
             />
             <input
-              name='price'
+              name="price"
               value={price}
               disabled
-              className='input w-full input-bordered'
+              className="input w-full input-bordered"
             />
             <input
-              name='phone'
-              type='text'
-              placeholder='Phone Number'
-              className='input w-full input-bordered'
+              name="phone"
+              type="text"
+              placeholder="Phone Number"
+              className="input w-full input-bordered"
               required
             />
             <input
-              name='place'
-              type='text'
-              placeholder='Meeting Location'
-              className='input w-full input-bordered'
+              name="place"
+              type="text"
+              placeholder="Meeting Location"
+              className="input w-full input-bordered"
               required
             />
             <br />
             <input
-              className='btn bg-indigo-700 hover:bg-indigo-800 w-full'
-              type='submit'
-              value='Submit'
+              className="btn bg-indigo-700 hover:bg-indigo-800 w-full"
+              type="submit"
+              value="Submit"
             />
           </form>
         </div>

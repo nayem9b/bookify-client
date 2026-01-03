@@ -28,27 +28,30 @@ const UserContext = ({ children }) => {
       setUserRole(null);
       return;
     }
-    
+
     try {
       const idToken = await currentUser.getIdToken();
       // Replace with your actual API endpoint
-      const response = await fetch('http://localhost:5000/api/user/role', {
-        headers: {
-          'Authorization': `Bearer ${idToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      
+      const response = await fetch(
+        "https://bookify-serverside.onrender.com/api/user/role",
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.ok) {
         const data = await response.json();
         setUserRole(data.role);
       } else {
-        console.error('Failed to fetch user role');
-        setUserRole('buyer'); // Default role if fetch fails
+        console.error("Failed to fetch user role");
+        setUserRole("buyer"); // Default role if fetch fails
       }
     } catch (error) {
-      console.error('Error fetching user role:', error);
-      setUserRole('buyer'); // Default role on error
+      console.error("Error fetching user role:", error);
+      setUserRole("buyer"); // Default role on error
     }
   }, []);
 
@@ -103,24 +106,28 @@ const UserContext = ({ children }) => {
     setLoading(true);
     setAuthError(null);
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       // Save additional user data to your backend
       const idToken = await result.user.getIdToken();
-      await fetch('http://localhost:5000/api/users', {
-        method: 'POST',
+      await fetch("https://bookify-serverside.onrender.com/api/users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           uid: result.user.uid,
           email: result.user.email,
           ...userData,
-          role: 'buyer', // Default role
+          role: "buyer", // Default role
         }),
       });
-      
+
       return result;
     } catch (error) {
       setAuthError(error.message);
@@ -136,9 +143,9 @@ const UserContext = ({ children }) => {
       await signOut(auth);
       setUser(null);
       setUserRole(null);
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
       throw error;
     }
   };

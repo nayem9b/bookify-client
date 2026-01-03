@@ -35,7 +35,7 @@ const PerCategoryPage = () => {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetch(`http://localhost:5000/api/categories/${id}/books`)
+    fetch(`https://bookify-serverside.onrender.com/api/categories/${id}/books`)
       .then((res) => res.json())
       .then((data) => {
         if (mounted) setBooks(Array.isArray(data) ? data : []);
@@ -148,7 +148,12 @@ const PerCategoryPage = () => {
                 }}
               >
                 <Link to={`/books/${book._id}`}>
-                  <TrialBookDetailsCard book={book} setItem={setSelectedItem} setPrice={setPrice} setPicture={setPicture} />
+                  <TrialBookDetailsCard
+                    book={book}
+                    setItem={setSelectedItem}
+                    setPrice={setPrice}
+                    setPicture={setPicture}
+                  />
                 </Link>
               </motion.div>
             ))}

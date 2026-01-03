@@ -10,7 +10,9 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { toast } from "react-hot-toast";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 // API base (top-level so it's stable for hooks)
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API_BASE =
+  process.env.REACT_APP_API_URL ||
+  "https://bookify-serverside.onrender.com/api";
 
 const BooksPage = () => {
   const [searchParams] = useSearchParams();

@@ -50,7 +50,7 @@ const TrialBookDetailsCard = ({ book, setItem, setPrice, setPicture }) => {
       return;
     }
 
-    fetch("http://localhost:5000/wishlist", {
+    fetch("https://bookify-serverside.onrender.com/wishlist", {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import AddAProduct from "../AddAProduct/AddAProduct";
 import AllBuyers from "../AllBuyers/AllBuyers";
@@ -45,12 +45,17 @@ export const router = createBrowserRouter([
         path: "/category/:id",
         element: <PerCategoryPage></PerCategoryPage>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/category/${params.id}`),
+          fetch(
+            `https://bookify-serverside.onrender.com/category/${params.id}`
+          ),
       },
       {
         path: "/books/:id",
         element: <BookDetailsPage />,
-        loader: ({ params }) => fetch(`http://localhost:5000/api/books/${params.id}`),
+        loader: ({ params }) =>
+          fetch(
+            `https://bookify-serverside.onrender.com/api/books/${params.id}`
+          ),
       },
       {
         path: "/signup",

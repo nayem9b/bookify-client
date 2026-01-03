@@ -5,7 +5,7 @@ const useBuyer = (email) => {
   const [isBuyerLoading, setIsBuyerLoading] = useState(true);
   useEffect(() => {
     if (email) {
-      fetch(`http://localhost:5000/api/users/buyer/${email}`)
+      fetch(`https://bookify-serverside.onrender.com/api/users/buyer/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setIsBuyer(data.isBuyer);

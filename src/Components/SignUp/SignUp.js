@@ -98,15 +98,18 @@ const SignUp = () => {
         email: user?.email || "",
         role: role || "buyer",
         signedBy: "google",
-        password : "sdjfoshdfohasdnkjalsndn"
+        password: "sdjfoshdfohasdnkjalsndn",
       };
-    
+
       // Save user info to backend
-      await fetch(`http://localhost:5000/api/users/register`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(userInfo),
-      });
+      await fetch(
+        `https://bookify-serverside.onrender.com/api/users/register`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(userInfo),
+        }
+      );
 
       navigate(from, { replace: true });
       toast.success("Successfully signed in with Google!");
@@ -151,7 +154,7 @@ const SignUp = () => {
           displayName: fullName,
         });
       }
-      
+
       // Save additional user info to database
       const userInfo = {
         name: fullName,
@@ -161,11 +164,14 @@ const SignUp = () => {
         guid: user?.uid,
       };
 
-      await fetch(`http://localhost:5000/api/users/register`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(userInfo),
-      });
+      await fetch(
+        `https://bookify-serverside.onrender.com/api/users/register`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(userInfo),
+        }
+      );
 
       // Success!
       toast.success("Account created successfully!");
