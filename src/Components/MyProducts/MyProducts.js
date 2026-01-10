@@ -9,7 +9,7 @@ const MyProducts = () => {
   const [click, setClick] = useState(1);
   const { user } = useContext(AuthContext);
   // useEffect(() => {
-  //   fetch(`http://localhost:5000/myproducts?email=${user.email}`)
+  //   fetch(`https://bookify-serverside.onrender.com/myproducts?email=${user.email}`)
   //     .then((res) => res.json())
   //     .then((data) => setProducts(data));
   // }, [user?.email]);
@@ -21,7 +21,7 @@ const MyProducts = () => {
     queryKey: ["email"],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/myproducts?email=${user.email}`
+        `https://bookify-serverside.onrender.com/myproducts?email=${user.email}`
       );
       const data = await res.json();
       return data;
@@ -29,7 +29,7 @@ const MyProducts = () => {
   });
 
   const handleAdvertise = (_id) => {
-    fetch(`http://localhost:5000/myproduct/${_id}`)
+    fetch(`https://bookify-serverside.onrender.com/myproduct/${_id}`)
       .then((res) => res.json())
       .then((data) => setClickedProduct(data));
     toast.success("Product successfully advertised!");
@@ -64,7 +64,7 @@ const MyProducts = () => {
       isVerified: isVerified,
     };
 
-    fetch(`http://localhost:5000/myproduct/new`, {
+    fetch(`https://bookify-serverside.onrender.com/myproduct/new`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -78,7 +78,7 @@ const MyProducts = () => {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/myproducts/${id}`, {
+    fetch(`https://bookify-serverside.onrender.com/myproducts/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -90,7 +90,7 @@ const MyProducts = () => {
   };
 
   const handleMarkAsSold = (id) => {
-    fetch(`http://localhost:5000/advertised/${id}`, {
+    fetch(`https://bookify-serverside.onrender.com/advertised/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

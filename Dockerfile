@@ -1,8 +1,8 @@
 # -------- Stage 1: Builder --------
 FROM node:18-alpine AS builder
 WORKDIR /myapp
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --non-interactive --no-progress --legacy-peer-deps
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN yarn build
 
