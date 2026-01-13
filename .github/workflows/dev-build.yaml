@@ -37,6 +37,12 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
 
+      # Set up Node.js for package.json update
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
       # Generate version based on commit count
       - name: Generate version
         id: version
@@ -58,16 +64,25 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "Version: $NEW_VERSION"
 
+      # Update package.json with new version
+      - name: Update package.json version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+            npm version $NEW_VERSION --no-git-tag-version
+            git add package.json package-lock.json
+            git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+            git push
+            echo "✓ Version updated from $CURRENT_VERSION to $NEW_VERSION"
+          else
+            echo "✓ Version already at $NEW_VERSION, skipping update"
+          fi
+
       - name: Generate timestamp
         id: timestamp
         run: echo "timestamp=$(date -u +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-
-      # Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
 
       # Install dependencies
       - name: Install dependencies
@@ -99,21 +114,31 @@ jobs:
           path: bookify-client-${{ steps.version.outputs.new_version }}.tar.gz
           retention-days: 30
 
-      # Create GitHub Release with artifact
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Log in to Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          tag_name: v${{ steps.version.outputs.new_version }}
-          name: Release v${{ steps.version.outputs.new_version }}
-          body: |
-            ## Build Artifact
-            - **Version**: ${{ steps.version.outputs.new_version }}
-            - **Build Timestamp**: ${{ steps.timestamp.outputs.timestamp }}
-            - **Artifact**: bookify-client-${{ steps.version.outputs.new_version }}.tar.gz
-            - **Commit**: ${{ github.sha }}
-          files: bookify-client-${{ steps.version.outputs.new_version }}.tar.gz
-          draft: false
-          prerelease: true
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      # Build and push Docker image to staging
+      - name: Build and push Docker image (dev)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev-${{ steps.version.outputs.new_version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev-latest
+          labels: |
+            org.opencontainers.image.version=${{ steps.version.outputs.new_version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            build.timestamp=${{ steps.timestamp.outputs.timestamp }}
 
       # Trigger staging deployment
       - name: Trigger staging deployment
@@ -126,7 +151,8 @@ jobs:
               workflow_id: 'staging-qa-release.yaml',
               ref: 'main',
               inputs: {
-                version: '${{ steps.version.outputs.new_version }}'
+                version: '${{ steps.version.outputs.new_version }}',
+                docker_tag: 'dev-${{ steps.version.outputs.new_version }}'
               }
             })
 
@@ -136,6 +162,6 @@ jobs:
           echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Version**: ${{ steps.version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Build Timestamp**: ${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev-${{ steps.version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Artifact**: bookify-client-${{ steps.version.outputs.new_version }}.tar.gz" >> $GITHUB_STEP_SUMMARY
-          echo "- **Release**: [v${{ steps.version.outputs.new_version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.new_version }})" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit SHA**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

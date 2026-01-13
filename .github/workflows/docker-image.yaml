@@ -72,10 +72,18 @@ jobs:
       # Update package.json with new version
       - name: Update package.json version
         run: |
-          npm version ${{ steps.version.outputs.new_version }} --no-git-tag-version
-          git add package.json
-          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }} [skip ci]"
-          git push
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+            npm version $NEW_VERSION --no-git-tag-version
+            git add package.json package-lock.json
+            git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+            git push
+            echo "✓ Version updated from $CURRENT_VERSION to $NEW_VERSION"
+          else
+            echo "✓ Version already at $NEW_VERSION, skipping update"
+          fi
 
       # Build the Docker image with the new version
       - name: Build the Docker image
