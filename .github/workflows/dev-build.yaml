@@ -81,6 +81,8 @@ jobs:
       # Build the application
       - name: Build application
         run: npm run build
+        env:
+          CI: false
 
       # Create artifact from build output
       - name: Create build artifact
