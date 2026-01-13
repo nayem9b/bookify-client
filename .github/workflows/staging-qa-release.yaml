@@ -4,17 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to deploy"
-        required: true
-        type: string
-      docker_tag:
-        description: "Docker image tag"
+        description: "Version to deploy (e.g., 0.0.1)"
         required: true
         type: string
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  ARTIFACT_NAME: bookify-client
 
 permissions:
   contents: read
@@ -36,28 +31,36 @@ jobs:
         run: |
           echo "## Staging Deployment" >> $GITHUB_STEP_SUMMARY
           echo "- **Version**: ${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Tag**: ${{ github.event.inputs.docker_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: Staging" >> $GITHUB_STEP_SUMMARY
 
-      # Download artifact from dev build
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: bookify-client-${{ github.event.inputs.version }}
-          path: ./artifacts
+      # Download artifact from GitHub release
+      - name: Download artifact from release
+        run: |
+          echo "Downloading artifact from release..."
+          gh release download v${{ github.event.inputs.version }} \
+            --pattern "${{ env.ARTIFACT_NAME }}-${{ github.event.inputs.version }}.tar.gz" \
+            --dir ./artifacts
+          echo "✓ Artifact downloaded successfully"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract and verify artifact
         run: |
+          mkdir -p staging-build
           cd artifacts
-          tar -tzf bookify-client-${{ github.event.inputs.version }}.tar.gz | head -20
-          echo "✓ Artifact verified successfully"
+          tar -xzf ${{ env.ARTIFACT_NAME }}-${{ github.event.inputs.version }}.tar.gz -C ../staging-build/
+          echo "✓ Artifact extracted successfully"
+          echo "Build contents:"
+          ls -la ../staging-build/ | head -20
 
       # Deploy to staging environment
       - name: Deploy to staging
         run: |
           echo "Deploying version ${{ github.event.inputs.version }} to staging..."
+          echo "Artifact: ${{ env.ARTIFACT_NAME }}-${{ github.event.inputs.version }}.tar.gz"
           # Update your staging deployment command here
-          # Example: kubectl set image deployment/bookify-client bookify-client=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.docker_tag }} -n staging
+          # Example: cp -r staging-build/* /path/to/staging/server/
+          # Example: systemctl restart staging-web-app
           echo "✓ Deployment completed"
 
       # Run QA tests
