@@ -248,7 +248,7 @@ jobs:
       - name: Create Git tag
         run: |
           TAG="${{ steps.version.outputs.new_version }}"
-          
+
           # Check if tag already exists
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "ℹ️  Tag $TAG already exists, skipping tag creation"
@@ -281,17 +281,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push Docker image to GHCR
         uses: docker/build-push-action@v6
@@ -299,15 +289,18 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
-          labels: ${{ steps.meta.outputs.labels }}
+            ghcr.io/${{ github.repository_owner }}/bookify-client-github-build:latest
+            ghcr.io/${{ github.repository_owner }}/bookify-client-github-build:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.title=Bookify Client
+            org.opencontainers.image.description=Bookify Client Application
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
       - name: Print GHCR Summary
         run: |
           echo "✓ Image published to GHCR"
           echo "  - Registry: ghcr.io"
-          echo "  - Repository: ${{ github.repository }}"
+          echo "  - Repository: ${{ github.repository_owner }}/bookify-client-github-build"
           echo "  - Tags: latest, ${{ github.sha }}"
 
   # ====================
@@ -349,8 +342,8 @@ jobs:
             echo "### 🐳 Container Images"
             echo "- **DockerHub**: \`nayem9b/bookify-client-github-build:${{ steps.version.outputs.version }}\`"
             echo "- **DockerHub**: \`nayem9b/bookify-client-github-build:latest\`"
-            echo "- **GHCR**: \`ghcr.io/${{ github.repository }}:latest\`"
-            echo "- **GHCR**: \`ghcr.io/${{ github.repository }}:${{ github.sha }}\`"
+            echo "- **GHCR**: \`ghcr.io/${{ github.repository_owner }}/bookify-client-github-build:latest\`"
+            echo "- **GHCR**: \`ghcr.io/${{ github.repository_owner }}/bookify-client-github-build:${{ github.sha }}\`"
             echo ""
             echo "### ✅ CI/CD Pipeline Status"
             echo "- Security Scan: ✓ Passed"
@@ -369,9 +362,11 @@ jobs:
             echo "This release has been automatically built and published to both DockerHub and GHCR."
             echo "Pull and deploy using:"
             echo "\`\`\`bash"
+            echo "# From DockerHub"
             echo "docker pull nayem9b/bookify-client-github-build:${{ steps.version.outputs.version }}"
-            echo "# or"
-            echo "docker pull ghcr.io/${{ github.repository }}:latest"
+            echo ""
+            echo "# From GHCR"
+            echo "docker pull ghcr.io/${{ github.repository_owner }}/bookify-client-github-build:latest"
             echo "\`\`\`"
             echo 'EOF'
           } >> $GITHUB_OUTPUT
