@@ -203,16 +203,15 @@ jobs:
       - name: Get next version
         id: version
         run: |
-          LATEST_TAG=$(git tag -l --sort=-v:refname | head -n 1)
+          LATEST_TAG=$(git tag -l --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
-          if [ -z "$LATEST_TAG" ] || ! [[ "$LATEST_TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="0.0.0"
           fi
 
-          CLEAN_TAG=${LATEST_TAG#v}
-          MAJOR=$(echo $CLEAN_TAG | cut -d. -f1)
-          MINOR=$(echo $CLEAN_TAG | cut -d. -f2)
-          PATCH=$(echo $CLEAN_TAG | cut -d. -f3)
+          MAJOR=$(echo $LATEST_TAG | cut -d. -f1)
+          MINOR=$(echo $LATEST_TAG | cut -d. -f2)
+          PATCH=$(echo $LATEST_TAG | cut -d. -f3)
 
           NEW_PATCH=$((PATCH + 1))
           NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
@@ -225,21 +224,6 @@ jobs:
         with:
           node-version: 20.x
           cache: "npm"
-
-      - name: Update package.json version
-        run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          NEW_VERSION="${{ steps.version.outputs.new_version }}"
-
-          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
-            npm version $NEW_VERSION --no-git-tag-version
-            git add package.json package-lock.json
-            git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
-            git push
-            echo "✓ Version updated from $CURRENT_VERSION to $NEW_VERSION"
-          else
-            echo "✓ Version already at $NEW_VERSION, skipping update"
-          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -263,8 +247,16 @@ jobs:
 
       - name: Create Git tag
         run: |
-          git tag ${{ steps.version.outputs.new_version }}
-          git push origin ${{ steps.version.outputs.new_version }}
+          TAG="${{ steps.version.outputs.new_version }}"
+          
+          # Check if tag already exists
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "ℹ️  Tag $TAG already exists, skipping tag creation"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+            echo "✓ Created and pushed tag: $TAG"
+          fi
 
   # ====================
   # PUBLISH TO GHCR
@@ -338,13 +330,14 @@ jobs:
       - name: Get version
         id: version
         run: |
-          LATEST_TAG=$(git tag -l --sort=-v:refname | head -n 1)
+          LATEST_TAG=$(git tag -l --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
-          if [ -z "$LATEST_TAG" ] || ! [[ "$LATEST_TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="0.0.0"
           fi
 
           echo "version=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest version: $LATEST_TAG"
 
       - name: Generate Changelog
         id: changelog
