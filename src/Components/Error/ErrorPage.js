@@ -46,7 +46,7 @@ const ErrorPage = () => {
             className="space-y-6"
           >
             <div className="space-y-4">
-              <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                 404
               </h1>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -86,7 +86,7 @@ const ErrorPage = () => {
           >
             <Link
               to="/"
-              className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-br from-slate-800 to-blue-900 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <FiHome className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span>Go Home</span>

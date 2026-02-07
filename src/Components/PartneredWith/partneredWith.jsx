@@ -46,7 +46,7 @@ export const PartneredWith = ({
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
               {title}
             </span>
           </h2>

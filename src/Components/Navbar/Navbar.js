@@ -268,13 +268,13 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <motion.div whileHover={{ scale: 1.05 }} className="relative">
-              <img
-                src={navicon}
-                alt="Bookify"
-                className="h-8 w-8 md:h-10 md:w-10"
-              />
-            </motion.div>
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+  <img
+    src={navicon}
+    alt="Bookify"
+    className="h-8 w-8 md:h-10 md:w-10 brightness-50 "
+  />
+</motion.div>
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-br from-slate-800 to-blue-900 bg-clip-text text-transparent">
               Bookify
             </span>
           </Link>
@@ -346,7 +346,7 @@ const Navbar = () => {
               to="/books"
               className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium"
             >
-              <FiBook className="w-4 h-4" />
+             
               <span>Books</span>
             </Link>
 
@@ -358,7 +358,7 @@ const Navbar = () => {
               onMouseLeave={() => setIsDiscoverOpen(false)}
             >
               <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-                <FiTrendingUp className="w-4 h-4" />
+              
                 <span>Discover</span>
                 <FiChevronDown
                   className={`w-4 h-4 transition-transform ${
@@ -616,7 +616,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/signup"
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-4 py-2 rounded-xl transition-all duration-300 font-medium shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-br from-slate-800 to-blue-900 hover:from-indigo-700 hover:to-purple-700 text-white px-4 py-2 rounded-xl transition-all duration-300 font-medium shadow-lg hover:shadow-xl"
                 >
                   Get Started
                 </Link>
@@ -810,7 +810,7 @@ const Navbar = () => {
                   </Link>
                   <Link
                     to="/signup"
-                    className="block w-full text-center py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300"
+                    className="block w-full text-center py-3 px-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Get Started

@@ -77,6 +77,3 @@ Contributions are what make the open source community such an amazing place to l
 
 For security-related information and to report vulnerabilities, please see our [Security Policy](SECURITY.md).
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.

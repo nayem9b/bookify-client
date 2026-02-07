@@ -126,7 +126,7 @@ const SignIn = () => {
             variants={item}
           >
             <div className="w-full h-full p-8">
-              <div className="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 overflow-hidden">
+              <div className="relative w-full h-full rounded-3xl bg-gradient-to-br from-slate-700 via-blue-800 to-indigo-900 overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                   <div 
@@ -237,7 +237,7 @@ const SignIn = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 h-2"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 h-2"></div>
               <div className="p-8 sm:p-10">
                 <motion.div
                   className="text-center mb-8"
@@ -251,9 +251,9 @@ const SignIn = () => {
                       whileHover={{ rotate: 5, scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <FiBookOpen className="text-4xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" />
+                      <FiBookOpen className="text-4xl bg-gradient-to-br from-slate-800 to-blue-900 bg-clip-text text-transparent" />
                     </motion.div>
-                    <span className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent ml-2">
+                    <span className="text-3xl font-extrabold bg-gradient-to-br from-slate-800 to-blue-900 bg-clip-text text-transparent ml-2">
                       Bookify
                     </span>
                   </div>
@@ -343,7 +343,7 @@ const SignIn = () => {
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`w-full flex justify-center py-3.5 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-md ${
+                      className={`w-full flex justify-center py-3.5 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-br from-slate-800 to-blue-900 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 shadow-md ${
                         isSubmitting
                           ? "opacity-80 cursor-not-allowed"
                           : "hover:shadow-lg"
