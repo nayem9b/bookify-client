@@ -95,7 +95,7 @@ const ProductCards = ({ title = "Featured Books", className = "" }) => {
     <div className={`w-full py-16 bg-background ${className}`}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
-        <h2 className="text-5xl font-bold text-center mb-16 bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <h2 className="text-5xl font-bold text-center mb-16 bg-clip-text bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
           {title}
         </h2>
 

@@ -327,9 +327,9 @@ const Home = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-700 -skew-y-3 transform origin-top-left"></div>
 
-        <div className="relative container mx-auto px-6 py-4 md:py-32 lg:flex lg:items-center lg:justify-between mt-[-100px]">
+        <div className="relative container mx-auto px-6 py-4 md:py-32 lg:flex lg:items-center lg:justify-between mt-[-170px]">
           <motion.div
             variants={fadeIn}
             initial="hidden"
@@ -364,11 +364,11 @@ const Home = () => {
               transition={{ delay: 0.4 }}
             >
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FiSearch className="h-5 w-5 text-indigo-400" />
+                <FiSearch className="h-5 w-5 text-gray-400" />
               </div>
               <input
                 type="text"
-                className="block w-full pl-12 pr-4 py-4 border-0 rounded-xl bg-white/90 text-gray-900 placeholder-indigo-400 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 shadow-lg"
+                className="block w-full pl-12 pr-4 py-4 border-0 rounded-xl bg-white/90 text-gray-900 placeholder-black focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 shadow-lg"
                 placeholder="Search for books, authors, or categories..."
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -501,7 +501,7 @@ const Home = () => {
         transition={{ duration: 0.6 }}
       >
         {/* Skewed Background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 -skew-y-3 transform origin-top-left"></div>
 
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -946,14 +946,14 @@ const Home = () => {
                 onClick={() => setSelectedCategory(null)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="mb-6 inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm text-indigo-600 font-semibold rounded-xl hover:bg-white transition-all duration-300 shadow-lg"
+                className="mb-6 inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm text-green-600 font-semibold rounded-xl hover:bg-white transition-all duration-300 shadow-lg"
               >
                 <FiArrowRight className="rotate-180 w-4 h-4" />
                 Back
               </motion.button>
 
               <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-green-500 via-red-600 to-pink-600 bg-clip-text text-transparent">
                   {selectedCategory.name}
                 </span>
               </h1>
@@ -1082,7 +1082,7 @@ const Home = () => {
               </motion.div>
 
               <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 relative">
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                   Trending Now
                 </span>
                 <motion.div
@@ -1126,7 +1126,7 @@ const Home = () => {
                   whileTap={{ scale: 0.95 }}
                   className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                     index === 0
-                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                      ? "bg-gradient-to-br from-slate-800 to-blue-900 text-white shadow-lg"
                       : "bg-white text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 border border-gray-200"
                   }`}
                   initial={{ opacity: 0, y: 10 }}
@@ -1237,7 +1237,7 @@ const Home = () => {
 
                         {/* Enhanced Badges */}
                         <div className="absolute top-4 left-4 flex flex-col gap-2">
-                          <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg">
+                          <span className="px-3 py-1.5 text-xs font-bold bg-gradient-to-br from-slate-800 to-blue-900 text-white rounded-full shadow-lg">
                             #1 Trending
                           </span>
                           <span className="px-3 py-1.5 text-xs font-semibold bg-white/95 text-indigo-600 rounded-full backdrop-blur-sm">
@@ -1373,7 +1373,7 @@ const Home = () => {
                             <motion.button
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              className="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                              className="flex-1 px-4 py-3 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                             >
                               <span>Add to Cart</span>
                               <FiArrowRight className="w-4 h-4" />
@@ -1412,7 +1412,7 @@ const Home = () => {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
                       to="/books"
-                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 group"
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 group"
                     >
                       Browse All Books
                       <FiArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -1443,7 +1443,7 @@ const Home = () => {
         transition={{ duration: 0.8 }}
       >
         {/* Skewed Background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 -skew-y-3 transform origin-top-left"></div>
 
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -1785,7 +1785,7 @@ const Home = () => {
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg"
             >
               <div className="text-center">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 flex items-center justify-center text-white text-2xl font-bold">
                   12
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -1854,7 +1854,7 @@ const Home = () => {
 
       {/* Social Proof & Community */}
       <motion.section
-        className="py-20 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 relative overflow-hidden"
+        className="py-20 bg-gradient-to-br relative overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -1874,7 +1874,7 @@ const Home = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-br from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 Join Our Community
               </span>
             </h2>
@@ -1890,7 +1890,7 @@ const Home = () => {
                 title: "Book Clubs",
                 description: "Join discussions with 10,000+ active members",
                 icon: <FiUsers className="w-8 h-8" />,
-                color: "from-violet-500 to-purple-500",
+                color: "from-blue-500 to-cyan-500",
                 members: "10,000+",
               },
               {
@@ -1940,7 +1940,7 @@ const Home = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
+                    className="px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
                   >
                     <Link to="/books" rel="noopener noreferrer">
                       Join Now
@@ -2058,7 +2058,7 @@ const Home = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-blue-900 -skew-y-3 transform origin-top-left"></div>
 
         <div className="relative container mx-auto px-6 z-10">
           <motion.div
@@ -2212,7 +2212,7 @@ const Home = () => {
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                 What Our Readers Say
               </span>
             </h2>
@@ -2409,7 +2409,7 @@ const Home = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="px-8 py-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Start Reading Free
                 </motion.button>
@@ -2515,13 +2515,13 @@ const Home = () => {
             >
               <Link
                 to="/signup"
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 text-center"
+                className="px-8 py-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 text-center"
               >
                 Get Started - It's Free
               </Link>
               <Link
                 to="/books"
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 text-center"
+                className="px-8 py-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 text-center"
               >
                 Browse Books
               </Link>

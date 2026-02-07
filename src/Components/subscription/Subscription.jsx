@@ -116,7 +116,7 @@ const Subscription = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                 Choose Your Reading Journey
               </span>
             </motion.h1>
@@ -172,7 +172,7 @@ const Subscription = () => {
                   >
                     {plan.popular && (
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                        <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                        <span className="bg-gradient-to-br from-slate-800 to-blue-900 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
                           Most Popular
                         </span>
                       </div>
@@ -222,7 +222,7 @@ const Subscription = () => {
                         <Button 
                           className={`w-full py-4 text-lg font-semibold rounded-xl transition-all duration-300 ${
                             plan.popular 
-                              ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl" 
+                              ? "bg-gradient-to-br from-slate-800 to-blue-900 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl" 
                               : "bg-white border-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300"
                           }`}
                           size="lg"
@@ -285,13 +285,13 @@ const Subscription = () => {
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-5xl">
             <motion.div
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center text-white relative overflow-hidden"
+              className="bg-gradient-to-br from-slate-800 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-blue-900 -skew-y-3 transform origin-top-left"></div>
               <div className="relative z-10">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
                   Start Your Reading Adventure Today

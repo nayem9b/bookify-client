@@ -57,27 +57,27 @@ const About = () => {
 
   const team = [
     {
-      name: "Sarah Johnson",
+      name: "Rezwan Nayem",
       role: "CEO & Founder",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face",
+      image: "https://avatars.githubusercontent.com/u/78756747?v=4",
       description: "Passionate about democratizing access to knowledge through technology."
     },
     {
       name: "Michael Chen",
       role: "CTO",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
+      image: "https://t4.ftcdn.net/jpg/03/25/73/59/360_F_325735908_TkxHU7okor9CTWHBhkGfdRumONWfIDEb.jpg",
       description: "Tech visionary building the future of digital reading experiences."
     },
     {
       name: "Emily Rodriguez",
       role: "Head of Content",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face",
+      image: "https://www.denverheadshotco.com/wp-content/uploads/2023/06/Company-Headshots-scaled.jpg",
       description: "Curating the world's most engaging and diverse book collection."
     },
     {
       name: "David Kim",
       role: "Head of Community",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+      image: "https://images.squarespace-cdn.com/content/v1/5ec689480cc22c2d441e152f/0b348836-1857-4ab0-b1b8-a06809b51366/personal-branding-portraits-professional-headshot-photography-connecticut-ct-photo-westport-studio-nlalor-21.jpg",
       description: "Building meaningful connections between readers worldwide."
     }
   ];
@@ -128,7 +128,7 @@ const About = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                 About Bookify
               </span>
             </motion.h1>
@@ -142,25 +142,25 @@ const About = () => {
               We're on a mission to make reading accessible, enjoyable, and transformative for everyone.
             </motion.p>
 
-            <motion.div
+            {/* <motion.div
               className="flex flex-wrap justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg">
-                <FiCoffee className="w-5 h-5 text-amber-600" />
+              
                 <span className="text-gray-700 font-medium">Founded 2020</span>
               </div>
               <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg">
-                <FiGlobe className="w-5 h-5 text-blue-600" />
+             
                 <span className="text-gray-700 font-medium">Global Platform</span>
               </div>
               <div className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg">
-                <FiHeart className="w-5 h-5 text-red-600" />
+              
                 <span className="text-gray-700 font-medium">Reader-First</span>
               </div>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         </div>
       </section>
@@ -185,7 +185,7 @@ const About = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
               >
-                <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white group-hover:shadow-xl transition-all duration-300">
+                <div className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white group-hover:shadow-xl transition-all duration-300">
                   {stat.icon}
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{stat.number}</h3>
@@ -244,8 +244,8 @@ const About = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="relative">
-                <div className="w-full h-96 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-2xl"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/80 to-purple-600/80 rounded-3xl flex items-center justify-center">
+                <div className="w-full h-96 bg-gradient-to-br from-cyan-500 to-blue-800 rounded-3xl shadow-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl flex items-center justify-center">
                   <div className="text-center text-white">
                     <FiBook className="w-20 h-20 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">50,000+</h3>
@@ -343,7 +343,7 @@ const About = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
+      <section className="py-20 bg-gradient-to-br from-slate-800 to-blue-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -384,13 +384,13 @@ const About = () => {
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center text-white relative overflow-hidden"
+            className="bg-gradient-to-br from-slate-800 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-blue-900 -skew-y-3 transform origin-top-left"></div>
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Join Our Reading Community
