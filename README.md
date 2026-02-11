@@ -1,8 +1,5 @@
 # Bookify
 
-<p align="center">
-  <img src="public/icons8-open-book-64.png" alt="Bookify Logo">
-</p>
 
 <h1 align="center">A Resale Book Trading Platform</h1>
 
