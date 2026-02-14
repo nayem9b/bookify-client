@@ -11,7 +11,7 @@ Bookify is a full-stack e-commerce platform that facilitates the buying and sell
 - **Product Management:** Sellers can add, manage, and track their book listings.
 - **Categorization:** Books are organized into various categories for easy browsing and discovery.
 - **Shopping Cart:** Buyers can add books to their cart and proceed to a seamless checkout process.
-- **Wishlist:** Users can save books to their wishlist for future reference.
+- **Wishlist:** Users can save books to their wishlist.
 - **Admin Dashboard:** Administrators have oversight of the platform, with the ability to manage users and products.
 - **Secure Authentication:** User authentication is handled through Firebase, ensuring secure access to the platform.
 - **Payment Integration:** The platform supports online payments for book purchases.
