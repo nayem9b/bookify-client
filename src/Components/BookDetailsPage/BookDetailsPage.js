@@ -242,7 +242,7 @@ export default function BookDetailsPage() {
               {/* Subtle glow effect */}
               <motion.span
                 layoutId="cart-glow"
-                className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/20 to-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
             </motion.button>
 

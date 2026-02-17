@@ -64,7 +64,7 @@ const ViewSubscription = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-slate-700 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
                   Welcome to Bookify
                 </span>
               </motion.h1>
@@ -94,7 +94,7 @@ const ViewSubscription = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                    className="px-8 py-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 flex items-center gap-2"
                   >
                     View Subscriptions
                     <ArrowRight className="w-5 h-5" />
@@ -184,13 +184,13 @@ const ViewSubscription = () => {
         <section className="py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center text-white relative overflow-hidden"
+              className="bg-gradient-to-br from-slate-800 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 -skew-y-3 transform origin-top-left"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-blue-900 -skew-y-3 transform origin-top-left"></div>
               <div className="relative z-10">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
                   Ready to Start Your Reading Journey?
