@@ -1,8 +1,5 @@
 # Bookify
 
-<p align="center">
-  <img src="public/icons8-open-book-64.png" alt="Bookify Logo">
-</p>
 
 <h1 align="center">A Resale Book Trading Platform</h1>
 
@@ -14,7 +11,7 @@ Bookify is a full-stack e-commerce platform that facilitates the buying and sell
 - **Product Management:** Sellers can add, manage, and track their book listings.
 - **Categorization:** Books are organized into various categories for easy browsing and discovery.
 - **Shopping Cart:** Buyers can add books to their cart and proceed to a seamless checkout process.
-- **Wishlist:** Users can save books to their wishlist for future reference.
+- **Wishlist:** Users can save books to their wishlist.
 - **Admin Dashboard:** Administrators have oversight of the platform, with the ability to manage users and products.
 - **Secure Authentication:** User authentication is handled through Firebase, ensuring secure access to the platform.
 - **Payment Integration:** The platform supports online payments for book purchases.
@@ -65,7 +62,7 @@ To get a local copy up and running, follow these simple steps.
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
