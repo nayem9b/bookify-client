@@ -1,830 +1,448 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import {
   FiSearch,
-  FiUser,
   FiHeart,
-  FiBook,
   FiMenu,
   FiX,
   FiChevronDown,
-  FiHome,
-  FiList,
-  FiSettings,
-  FiLogOut,
-  FiShoppingBag,
-  FiBookOpen,
-  FiStar,
-  FiGift,
-  FiHelpCircle,
-  FiBell,
   FiShoppingCart,
-  FiTrendingUp,
-  FiAward,
-  FiBookmark,
 } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCart } from "../../redux/slices/cartSlice";
 import { motion, AnimatePresence } from "framer-motion";
-import navicon from "../../Images/icons8-open-book-64.png";
 import CartSidebar from "../Cart/CartSidebar";
 import WishlistSidebar from "../Wishlist/WishlistSidebar";
 import { toggleWishlist } from "../../redux/slices/wishlistSlice";
 
+const categories = [
+  { name: "Fiction", value: "Fiction" },
+  { name: "Non-fiction", value: "Non-Fiction" },
+  { name: "Mystery", value: "Mystery" },
+  { name: "Romance", value: "Romance" },
+  { name: "Science fiction", value: "Sci-fi" },
+  { name: "Biography", value: "Biography" },
+  { name: "History", value: "History" },
+  { name: "Self-help", value: "Self-help" },
+];
+
+const navItems = [
+  { name: "Books", path: "/books" },
+  { name: "About", path: "/about" },
+  { name: "Contact", path: "/contact" },
+];
+
+const userMenuItems = [
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "My orders", path: "/dashboard/myorders" },
+  { name: "Wishlist", path: "/dashboard/wishlist" },
+  { name: "Settings", path: "/settings" },
+];
+
+const navLinkClass = ({ isActive }) =>
+  `text-[15px] transition-colors hover:text-cloth ${
+    isActive ? "text-cloth underline decoration-2 underline-offset-[10px]" : "text-ink"
+  }`;
+
+const CountBadge = ({ count }) =>
+  count > 0 ? (
+    <span className="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-stamp px-1 text-[11px] font-semibold leading-none text-paper">
+      {count}
+    </span>
+  ) : null;
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [isDiscoverOpen, setIsDiscoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { user, logout } = useContext(AuthContext);
-  console.log(user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { items } = useSelector((state) => state.cart);
   const wishlistCount = useSelector((state) =>
     state.wishlist && state.wishlist.items ? state.wishlist.items.length : 0
   );
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
-  // Close dropdowns when clicking outside
   const userMenuRef = useRef(null);
   const categoriesMenuRef = useRef(null);
-  const discoverMenuRef = useRef(null);
-  const notificationsMenuRef = useRef(null);
-
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only handle click outside for user menu (which should remain click-based)
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
-      // Close notifications when clicking outside
       if (
-        notificationsMenuRef.current &&
-        !notificationsMenuRef.current.contains(event.target)
+        categoriesMenuRef.current &&
+        !categoriesMenuRef.current.contains(event.target)
       ) {
-        setIsNotificationsOpen(false);
+        setIsCategoriesOpen(false);
       }
-      // Categories and Discover are now hover-based, so we don't need click outside detection for them
+    };
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsUserMenuOpen(false);
+        setIsCategoriesOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
+
+  // Close menus after navigating.
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsUserMenuOpen(false);
+    setIsCategoriesOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
       await logout();
       setIsMenuOpen(false);
       setIsUserMenuOpen(false);
-      toast.success("Logged out!");
+      toast.success("Signed out");
     } catch (error) {
-      toast.error("Failed to log out. Please try again.");
+      toast.error("Couldn't sign out. Try again.");
     }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    const term = searchQuery.trim();
+    if (term) {
+      navigate(`/books?search=${encodeURIComponent(term)}`);
       setSearchQuery("");
-      setIsSearchOpen(false);
+      setIsMenuOpen(false);
     }
   };
 
-  const handleCategoryClick = (categoryName) => {
-    navigate("/books", { state: { selectedCategory: categoryName } });
+  const handleCategoryClick = (categoryValue) => {
+    navigate("/books", { state: { selectedCategory: categoryValue } });
     setIsCategoriesOpen(false);
+    setIsMenuOpen(false);
   };
 
-  const categories = [
-    {
-      name: "Fiction",
-      icon: <FiBook className="w-4 h-4" />,
-      value: "Fiction",
-    },
-    {
-      name: "Non-Fiction",
-      icon: <FiBookOpen className="w-4 h-4" />,
-      value: "Non-Fiction",
-    },
-    {
-      name: "Mystery",
-      icon: <FiBookmark className="w-4 h-4" />,
-      value: "Mystery",
-    },
-    {
-      name: "Romance",
-      icon: <FiHeart className="w-4 h-4" />,
-      value: "Romance",
-    },
-    {
-      name: "Science Fiction",
-      icon: <FiStar className="w-4 h-4" />,
-      value: "Sci-fi",
-    },
-    {
-      name: "Biography",
-      icon: <FiUser className="w-4 h-4" />,
-      value: "Biography",
-    },
-    {
-      name: "History",
-      icon: <FiBook className="w-4 h-4" />,
-      value: "History",
-    },
-    {
-      name: "Self-Help",
-      icon: <FiTrendingUp className="w-4 h-4" />,
-      value: "Self-help",
-    },
-  ];
-
-  const userMenuItems = [
-    {
-      name: "Dashboard",
-      icon: <FiHome className="w-4 h-4" />,
-      path: "/dashboard",
-    },
-    {
-      name: "My Orders",
-      icon: <FiShoppingBag className="w-4 h-4" />,
-      path: "/dashboard/myorders",
-    },
-    {
-      name: "Wishlist",
-      icon: <FiHeart className="w-4 h-4" />,
-      path: "/wishlist",
-    },
-    {
-      name: "Settings",
-      icon: <FiSettings className="w-4 h-4" />,
-      path: "/settings",
-    },
-    {
-      name: "Help & Support",
-      icon: <FiHelpCircle className="w-4 h-4" />,
-      path: "/help",
-    },
-  ];
-
-  const quickLinks = [
-    {
-      name: "New Releases",
-      icon: <FiBook className="w-4 h-4" />,
-      path: "/new-releases",
-    },
-    {
-      name: "Best Sellers",
-      icon: <FiAward className="w-4 h-4" />,
-      path: "/bestsellers",
-    },
-    {
-      name: "Free Books",
-      icon: <FiGift className="w-4 h-4" />,
-      path: "/free-books",
-    },
-    {
-      name: "Audio Books",
-      icon: <FiBookOpen className="w-4 h-4" />,
-      path: "/audiobooks",
-    },
-  ];
-
-  const discoverItems = [
-    {
-      name: "Trending Now",
-      icon: <FiTrendingUp className="w-4 h-4" />,
-      path: "/books?category=trending",
-      description: "What's popular right now",
-    },
-    {
-      name: "Editor's Choice",
-      icon: <FiStar className="w-4 h-4" />,
-      path: "/books?category=editors-choice",
-      description: "Handpicked by our experts",
-    },
-    {
-      name: "Book of the Month",
-      icon: <FiAward className="w-4 h-4" />,
-      path: "/books?category=book-of-month",
-      description: "Featured monthly selection",
-    },
-    {
-      name: "Reading Lists",
-      icon: <FiBookmark className="w-4 h-4" />,
-      path: "/books?category=reading-lists",
-      description: "Curated collections",
-    },
-    {
-      name: "Author Spotlights",
-      icon: <FiUser className="w-4 h-4" />,
-      path: "/books?category=authors",
-      description: "Meet your favorite authors",
-    },
-  ];
-
-  // Sample notifications - replace with real data when available
-  const notifications = [
-    {
-      id: 1,
-      title: "Price drop on Black Friday Deals",
-      subtitle: "2 hours ago",
-      path: "/dashboard",
-    },
-    {
-      id: 2,
-      title: "Price drop on a wishlist item",
-      subtitle: "1 day ago",
-      path: "/dashboard",
-    },
-    {
-      id: 3,
-      title: "New book added to 'Sci-Fi'",
-      subtitle: "3 days ago",
-      path: "/dashboard",
-    },
-  ];
-
-  const additionalNavItems = [
-    { name: "About Us", path: "/about" },
-    { name: "Contact", path: "/contact" },
-    // { name: "Blog", path: "/blog" },
-    // { name: "Help Center", path: "/help" },
-  ];
+  const initial = user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
-    <header className="fixed w-full z-50 bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20">
-      {/* Glassmorphism overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-white/40 pointer-events-none"></div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <motion.div whileHover={{ scale: 1.05 }} className="relative">
-  <img
-    src={navicon}
-    alt="Bookify"
-    className="h-8 w-8 md:h-10 md:w-10 brightness-50 "
-  />
-</motion.div>
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-br from-slate-800 to-blue-900 bg-clip-text text-transparent">
-              Bookify
-            </span>
-          </Link>
+    <>
+    <header className="fixed z-50 w-full border-b border-rule bg-paper">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6 md:h-20 lg:px-8">
+        <Link
+          to="/"
+          className="font-spine text-[28px] font-extrabold uppercase leading-none tracking-wide text-ink"
+        >
+          Bookify
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {/* Home
-            <Link
-              to="/"
-              className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium"
+        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
+          <div className="relative" ref={categoriesMenuRef}>
+            <button
+              type="button"
+              aria-expanded={isCategoriesOpen}
+              aria-haspopup="true"
+              onClick={() => setIsCategoriesOpen((open) => !open)}
+              className="flex items-center gap-1 text-[15px] text-ink transition-colors hover:text-cloth"
             >
-              <FiHome className="w-4 h-4" />
-              <span>Home</span>
-            </Link> */}
+              Categories
+              <FiChevronDown
+                aria-hidden="true"
+                className={`h-4 w-4 transition-transform ${
+                  isCategoriesOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
-            {/* Categories Dropdown */}
-            <div
-              className="relative"
-              ref={categoriesMenuRef}
-              onMouseEnter={() => setIsCategoriesOpen(true)}
-              onMouseLeave={() => setIsCategoriesOpen(false)}
-            >
-              <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-                <FiList className="w-4 h-4" />
-                <span>Categories</span>
-                <FiChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isCategoriesOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <AnimatePresence>
-                {isCategoriesOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-                  >
-                    <div className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Browse Categories
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        {categories.map((category, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleCategoryClick(category.value)}
-                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors group text-left"
-                          >
-                            <div className="text-indigo-600 group-hover:text-indigo-700">
-                              {category.icon}
-                            </div>
-                            <span className="text-gray-700 group-hover:text-indigo-700 font-medium">
-                              {category.name}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Books */}
-            <Link
-              to="/books"
-              className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium"
-            >
-             
-              <span>Books</span>
-            </Link>
-
-            {/* Discover Dropdown */}
-            <div
-              className="relative"
-              ref={discoverMenuRef}
-              onMouseEnter={() => setIsDiscoverOpen(true)}
-              onMouseLeave={() => setIsDiscoverOpen(false)}
-            >
-              <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-              
-                <span>Discover</span>
-                <FiChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isDiscoverOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <AnimatePresence>
-                {isDiscoverOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full left-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-                  >
-                    <div className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Discover More
-                      </h3>
-                      <div className="grid grid-cols-1 gap-2">
-                        {discoverItems.map((item, index) => (
-                          <Link
-                            key={index}
-                            to={item.path}
-                            className="flex items-start space-x-3 p-4 rounded-lg hover:bg-indigo-50 transition-colors group"
-                            onClick={() => setIsDiscoverOpen(false)}
-                          >
-                            <div className="text-indigo-600 group-hover:text-indigo-700 mt-1">
-                              {item.icon}
-                            </div>
-                            <div className="flex-1">
-                              <span className="text-gray-700 group-hover:text-indigo-700 font-medium block">
-                                {item.name}
-                              </span>
-                              <span className="text-sm text-gray-500 group-hover:text-indigo-600">
-                                {item.description}
-                              </span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Additional Navigation Items */}
-            <div className="flex items-center space-x-6">
-              {additionalNavItems.map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className="text-gray-700 hover:text-indigo-600 transition-colors font-medium"
+            <AnimatePresence>
+              {isCategoriesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 top-full mt-4 w-72 rounded-md border border-rule bg-paper p-2 shadow-[0_12px_32px_-12px_rgba(30,42,40,0.35)]"
                 >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Search Bar
-          <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <form onSubmit={handleSearch} className="relative w-full">
-              <div className="relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search books, authors, categories..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200"
-                />
-              </div>
-            </form>
-          </div> */}
-
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Search Button (Mobile) */}
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="md:hidden p-2 text-gray-600 hover:text-indigo-600 transition-colors"
-            >
-              <FiSearch className="w-5 h-5" />
-            </button>
-
-            {/* Wishlist */}
-            <button
-              onClick={() => dispatch(toggleWishlist())}
-              className="hidden md:block p-2 text-gray-600 hover:text-indigo-600 transition-colors relative"
-              aria-label="Open wishlist"
-            >
-              <FiHeart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-500 rounded-full h-4 w-4 flex items-center justify-center">
-                {wishlistCount}
-              </span>
-            </button>
-
-            {/* Notifications (hover to open) */}
-            <div
-              className="relative"
-              ref={notificationsMenuRef}
-              onMouseEnter={() => setIsNotificationsOpen(true)}
-              onMouseLeave={() => setIsNotificationsOpen(false)}
-            >
-              <button
-                aria-haspopup="true"
-                aria-expanded={isNotificationsOpen}
-                className="hidden md:block p-2 text-gray-600 hover:text-indigo-600 transition-colors relative"
-              >
-                <FiBell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-indigo-500 rounded-full h-4 w-4 flex items-center justify-center">
-                  {notifications.length}
-                </span>
-              </button>
-
-              <AnimatePresence>
-                {isNotificationsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50"
-                  >
-                    <div className="p-4">
-                      <h4 className="text-sm font-semibold text-gray-900">
-                        Notifications
-                      </h4>
-                      <div className="mt-2 space-y-2">
-                        {notifications.map((n) => (
-                          <Link
-                            key={n.id}
-                            to={n.path}
-                            onClick={() => setIsNotificationsOpen(false)}
-                            className="flex items-start space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors group"
-                          >
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-800 font-medium">
-                                {n.title}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {n.subtitle}
-                              </p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="pt-3 border-t border-gray-100 mt-3">
-                        <Link
-                          to="/dashboard"
-                          onClick={() => setIsNotificationsOpen(false)}
-                          className="block text-center text-sm text-indigo-600 py-2"
-                        >
-                          View all
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Cart */}
-            <button
-              onClick={() => dispatch(toggleCart())}
-              className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors"
-            >
-              <FiShoppingCart className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 text-xs font-bold text-white bg-red-500 rounded-full h-4 w-4 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
-
-            {/* User Menu */}
-            {user ? (
-              <div className="relative" ref={userMenuRef}>
-                <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 p-2 text-gray-700 hover:text-indigo-600 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-                    {user.email?.charAt(0).toUpperCase() || "U"}
-                  </div>
-                  <FiChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      isUserMenuOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-
-                <AnimatePresence>
-                  {isUserMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-                    >
-                      <div className="p-4 border-b border-gray-100">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-                            {user.email?.charAt(0).toUpperCase() || "U"}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">
-                              {user.email}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              Premium Member
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-2">
-                        {userMenuItems.map((item, index) => (
-                          <Link
-                            key={index}
-                            to={item.path}
-                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors group"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            <div className="text-gray-500 group-hover:text-indigo-600">
-                              {item.icon}
-                            </div>
-                            <span className="text-gray-700 group-hover:text-indigo-600 font-medium">
-                              {item.name}
-                            </span>
-                          </Link>
-                        ))}
+                  <ul className="grid grid-cols-2">
+                    {categories.map((category) => (
+                      <li key={category.value}>
                         <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-red-50 transition-colors group text-left"
+                          type="button"
+                          onClick={() => handleCategoryClick(category.value)}
+                          className="w-full rounded px-3 py-2 text-left text-sm text-ink hover:bg-paper-deep"
                         >
-                          <FiLogOut className="w-4 h-4 text-gray-500 group-hover:text-red-600" />
-                          <span className="text-gray-700 group-hover:text-red-600 font-medium">
-                            Sign Out
-                          </span>
+                          {category.name}
                         </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-3">
-                <Link
-                  to="/signin"
-                  className="text-gray-700 hover:text-indigo-600 transition-colors font-medium"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="bg-gradient-to-br from-slate-800 to-blue-900 hover:from-indigo-700 hover:to-purple-700 text-white px-4 py-2 rounded-xl transition-all duration-300 font-medium shadow-lg hover:shadow-xl"
-                >
-                  Get Started
-                </Link>
-              </div>
-            )}
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-gray-600 hover:text-indigo-600 transition-colors"
-            >
-              {isMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/categories"
+                    className="mt-1 block border-t border-rule px-3 pb-1 pt-3 text-sm font-semibold text-cloth hover:underline"
+                  >
+                    All categories
+                  </Link>
+                </motion.div>
               )}
-            </button>
+            </AnimatePresence>
           </div>
+
+          {navItems.map((item) => (
+            <NavLink key={item.path} to={item.path} className={navLinkClass}>
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
+
+        <form
+          onSubmit={handleSearch}
+          role="search"
+          className="ml-auto hidden max-w-xs flex-1 items-center rounded border border-ink/20 bg-white/60 focus-within:border-stamp md:flex"
+        >
+          <label htmlFor="nav-search" className="sr-only">
+            Search books
+          </label>
+          <FiSearch aria-hidden="true" className="ml-3 h-4 w-4 text-ink-faint" />
+          <input
+            id="nav-search"
+            type="search"
+            placeholder="Search books"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full border-0 bg-transparent px-2 py-2 text-sm text-ink placeholder:text-ink-faint focus:ring-0"
+          />
+        </form>
+
+        <div className="ml-auto flex items-center gap-1 md:ml-0">
+          <button
+            type="button"
+            onClick={() => dispatch(toggleWishlist())}
+            className="relative hidden rounded p-2 text-ink hover:text-cloth md:block"
+            aria-label={`Open wishlist (${wishlistCount})`}
+          >
+            <FiHeart className="h-5 w-5" />
+            <CountBadge count={wishlistCount} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => dispatch(toggleCart())}
+            className="relative rounded p-2 text-ink hover:text-cloth"
+            aria-label={`Open cart (${cartItemCount})`}
+          >
+            <FiShoppingCart className="h-5 w-5" />
+            <CountBadge count={cartItemCount} />
+          </button>
+
+          {user ? (
+            <div className="relative ml-2 hidden lg:block" ref={userMenuRef}>
+              <button
+                type="button"
+                aria-expanded={isUserMenuOpen}
+                aria-haspopup="true"
+                aria-label="Account menu"
+                onClick={() => setIsUserMenuOpen((open) => !open)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-cloth text-sm font-semibold text-paper"
+              >
+                {initial}
+              </button>
+
+              <AnimatePresence>
+                {isUserMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-3 w-60 rounded-md border border-rule bg-paper p-2 shadow-[0_12px_32px_-12px_rgba(30,42,40,0.35)]"
+                  >
+                    <p className="truncate border-b border-rule px-3 pb-3 pt-1 text-sm text-ink-soft">
+                      {user.email}
+                    </p>
+                    <ul className="py-1">
+                      {userMenuItems.map((item) => (
+                        <li key={item.path}>
+                          <Link
+                            to={item.path}
+                            className="block rounded px-3 py-2 text-sm text-ink hover:bg-paper-deep"
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full rounded border-t border-rule px-3 py-2 text-left text-sm text-ink hover:bg-paper-deep"
+                    >
+                      Sign out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="ml-3 hidden items-center gap-4 lg:flex">
+              <Link
+                to="/signin"
+                className="text-[15px] text-ink hover:text-cloth"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="rounded bg-cloth px-4 py-2 text-sm font-semibold text-paper transition-colors hover:bg-cloth-dark"
+              >
+                Create account
+              </Link>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="rounded p-2 text-ink lg:hidden"
+          >
+            {isMenuOpen ? (
+              <FiX className="h-6 w-6" />
+            ) : (
+              <FiMenu className="h-6 w-6" />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Search */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-gray-200"
-          >
-            <div className="p-4">
-              <form onSubmit={handleSearch} className="relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search books, authors, categories..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                />
-              </form>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
+          <motion.nav
+            aria-label="Mobile"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-gray-200 shadow-lg"
+            className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-rule bg-paper lg:hidden"
           >
-            <div className="px-4 py-6 space-y-4">
-              {/* Mobile Navigation Links */}
-              <div className="space-y-2">
-                <Link
-                  to="/"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FiHome className="w-5 h-5 text-indigo-600" />
-                  <span className="font-medium text-gray-900">Home</span>
-                </Link>
+            <div className="space-y-6 px-4 py-6 sm:px-6">
+              <form
+                onSubmit={handleSearch}
+                role="search"
+                className="flex items-center rounded border border-ink/20 bg-white/60 focus-within:border-stamp md:hidden"
+              >
+                <label htmlFor="mobile-search" className="sr-only">
+                  Search books
+                </label>
+                <FiSearch
+                  aria-hidden="true"
+                  className="ml-3 h-4 w-4 text-ink-faint"
+                />
+                <input
+                  id="mobile-search"
+                  type="search"
+                  placeholder="Search books"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full border-0 bg-transparent px-2 py-3 text-base text-ink placeholder:text-ink-faint focus:ring-0"
+                />
+              </form>
 
-                <Link
-                  to="/books"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FiBook className="w-5 h-5 text-indigo-600" />
-                  <span className="font-medium text-gray-900">Books</span>
-                </Link>
+              <ul className="divide-y divide-rule border-y border-rule">
+                {[{ name: "Home", path: "/" }, ...navItems].map((item) => (
+                  <li key={item.path}>
+                    <Link to={item.path} className="block py-3 text-lg text-ink">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      dispatch(toggleWishlist());
+                    }}
+                    className="w-full py-3 text-left text-lg text-ink"
+                  >
+                    Wishlist{wishlistCount > 0 && ` (${wishlistCount})`}
+                  </button>
+                </li>
+              </ul>
 
-                <Link
-                  to="/categories"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FiList className="w-5 h-5 text-indigo-600" />
-                  <span className="font-medium text-gray-900">Categories</span>
-                </Link>
-
-                {/* Additional Navigation Items for Mobile */}
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                    More
-                  </h3>
-                  <div className="space-y-2">
-                    {additionalNavItems.map((item, index) => (
-                      <Link
-                        key={index}
-                        to={item.path}
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
+              <div>
+                <h2 className="text-sm font-semibold text-ink-soft">
+                  Categories
+                </h2>
+                <ul className="mt-2 grid grid-cols-2">
+                  {categories.map((category) => (
+                    <li key={category.value}>
+                      <button
+                        type="button"
+                        onClick={() => handleCategoryClick(category.value)}
+                        className="w-full py-2 text-left text-ink"
                       >
-                        <span className="font-medium text-gray-900">
-                          {item.name}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Discover Section */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  Discover
-                </h3>
-                <div className="space-y-2">
-                  {discoverItems.map((item, index) => (
-                    <Link
-                      key={index}
-                      to={item.path}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <div className="text-indigo-600 mt-1">{item.icon}</div>
-                      <div className="flex-1">
-                        <span className="font-medium text-gray-900 block">
-                          {item.name}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {item.description}
-                        </span>
-                      </div>
-                    </Link>
+                        {category.name}
+                      </button>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
-              {/* Quick Links */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  Quick Links
-                </h3>
-                <div className="space-y-2">
-                  {quickLinks.map((link, index) => (
-                    <Link
-                      key={index}
-                      to={link.path}
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {link.icon}
-                      <span className="font-medium text-gray-900">
-                        {link.name}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* User Actions */}
               {user ? (
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="space-y-2">
-                    {userMenuItems.map((item, index) => (
-                      <Link
-                        key={index}
-                        to={item.path}
-                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-50 transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.icon}
-                        <span className="font-medium text-gray-900">
+                <div className="border-t border-rule pt-4">
+                  <p className="truncate text-sm text-ink-soft">{user.email}</p>
+                  <ul className="mt-2">
+                    {userMenuItems.map((item) => (
+                      <li key={item.path}>
+                        <Link to={item.path} className="block py-2 text-ink">
                           {item.name}
-                        </span>
-                      </Link>
+                        </Link>
+                      </li>
                     ))}
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-red-50 transition-colors text-left"
-                    >
-                      <FiLogOut className="w-5 h-5 text-red-600" />
-                      <span className="font-medium text-red-600">Sign Out</span>
-                    </button>
-                  </div>
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="mt-2 py-2 text-ink underline underline-offset-4"
+                  >
+                    Sign out
+                  </button>
                 </div>
               ) : (
-                <div className="border-t border-gray-200 pt-4 space-y-3">
+                <div className="grid grid-cols-2 gap-3 border-t border-rule pt-5">
                   <Link
                     to="/signin"
-                    className="block w-full text-center py-3 px-4 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded border border-ink/25 py-3 text-center font-semibold text-ink"
                   >
-                    Sign In
+                    Sign in
                   </Link>
                   <Link
                     to="/signup"
-                    className="block w-full text-center py-3 px-4 bg-gradient-to-br from-slate-800 to-blue-900 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded bg-cloth py-3 text-center font-semibold text-paper"
                   >
-                    Get Started
+                    Create account
                   </Link>
                 </div>
               )}
             </div>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
 
-      <CartSidebar />
-      <WishlistSidebar />
     </header>
+    {/* Outside the header so their fixed overlays cover the whole viewport. */}
+    <CartSidebar />
+    <WishlistSidebar />
+    </>
   );
 };
 

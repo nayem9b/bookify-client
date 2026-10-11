@@ -2,13 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  body {
+    margin: 0;
+    font-family: Literata, Georgia, serif;
+    font-optical-sizing: auto;
+    background-color: #eceee6;
+    color: #1e2a28;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid #3646a0;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: #2f5d50;
+    color: #eceee6;
+  }
 }
 
 code {
@@ -33,4 +46,36 @@ code {
 /* Pause animation on hover */
 .animate-scroll-left:hover {
   animation-play-state: paused;
+}
+
+/* Home shelf: spines rise once on load, then lift when a reader picks one. */
+@keyframes spine-rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.spine {
+  writing-mode: vertical-rl;
+  animation: spine-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  transition: transform 0.18s ease-out;
+}
+
+.spine:hover,
+.spine:focus-visible {
+  transform: translateY(-14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine {
+    animation: none;
+    transition: none;
+  }
+  .animate-scroll-left,
+  .animate-scroll-right {
+    animation: none;
+  }
 }
